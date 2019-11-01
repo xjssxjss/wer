@@ -24,10 +24,6 @@ public class GlobalConstant {
     //数据访问成功提示
     public static final String SUCCESS_MESSAGE = "数据访问成功!!";
 
-    public static final String FAIL_PRICE_NOT_COMPLATE = "价格表数据不完整，请维护相关表数据!!";
-
-    //数据访问失败提示
-
     public static final String ERROR_MESSAGE = "数据访问失败!!";
 
     //附件类型
