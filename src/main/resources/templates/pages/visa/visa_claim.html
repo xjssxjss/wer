@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <!--th:replace="common_head :: commonHeader('首页')"-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>签证要求</title>
+
+    <link rel="stylesheet" th:href="@{/common/lib/weui.min.css}"/>
+    <link rel="stylesheet" th:href="@{/common/css/jquery-weui.css}"/>
+
+    <style>
+        .title_color{
+            color: darkgray;
+            font-weight: lighter;
+        }
+    </style>
+</head>
+
+<body ontouchstart class="page">
+<div class="page-bd">
+    <div class="weui-cells">
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>国家</p>
+            </div>
+            <div class="weui-cell__ft" th:text="${person.name}"></div>
+        </div>
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>首都</p>
+            </div>
+            <div class="weui-cell__ft">俄罗斯首都</div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>使领馆签证处地址</p>
+                <h5 class="title_color">
+                    <p>
+                        东直门外大街3号<br/>
+                        电话:938489304<br/>
+                        传真:9493093020939<br/>
+                        贸易处:东直门外大街5号中旅大厦
+                    </p>
+                </h5>
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>使馆签证处开放时间</p>
+                <h5 class="title_color">
+                    <p>
+                    周一至周五
+                    </p>
+                </h5>
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>使馆签证办理所需时间</p>
+                <h5 class="title_color">
+                    <p>
+                        7个工作日
+                    </p>
+                </h5>
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>签证渠道</p>
+                <h5>
+                    <p class="title_color">
+                        自
+                    </p>
+                </h5>
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>面签渠道</p>
+                <h5>
+                    <p class="title_color">
+                        D
+                    </p>
+                </h5>
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>表格、相片及其他要求</p>
+                <h5 class="title_color">
+                    1.申请表1份(网上下载)，主表、护照复印件钉在一起<br/>
+                    2.近期(近六个月)2寸白底彩照2张<br/>
+                    3.3人(含以上名单表2份)<br/>
+                    4.启程前护照须有半年以上有效件及英译文<br/>
+                    5.保险及复印<br/>
+                    6.机票订单<br/>
+                    7.酒店订单
+                </h5>
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>过境签证要求</p>
+                <h5>
+                    <p class="title_color">
+                        24小时不出机场免办,办证需提供机票订单。过境签允停留5天
+                    </p>
+                </h5>
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>自办要求</p>
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>备注</p>
+                <h5  class="title_color">
+                    <ul style="margin-left: 20px;">
+                        <li>
+                            该馆每周五下午闭馆,无法采集指纹
+                        </li>
+                        <li>
+                            瑞典签证需注意以下两点
+                        </li>
+                    </ul>
+                    1、直送团组必须提供标注有VIS字样,首次取指纹(有效期为59个月)获发申根签证人员的签证页复印件作为申签材料首页；同事,照会/确认函须加盖"直送使馆"印章<br/>
+                    2、团组中存在部分成员需预约指纹,则无需加盖印章，但必须提供首次留取指纹获发申根签证人员的签证页复印件作为申签材料首页。<br/>
+                    申请人在填写申根签证申请表第26,27项时勾选符合个人情况的选项。此前已在申根国家驻华使领馆采集指纹(有效期59个月)并获发签证的出访人,需选择已留取指纹选项。
+                </h5>
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>发布日期</p>
+            </div>
+            <div class="weui-cell__ft">2019-03-29</div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <p>签证表格</p>
+                <h5>
+                    <a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=ww276e0367e9eace3e&redirect_uri=https%3A%2F%2Flogin.dangdang.com%2Flogin_third_weixin%2Fcallback_weixin.php&response_type=code&scope=SCOPE&state=swb2019#wechat_redirect">微信授权登录</a><br/>
+                    <a href="http://www.xieyahui.cn/images/plate.pdf ">瑞典D签证申请表.pdf</a>
+                </h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="../../../common/lib/jquery-2.1.4.js"></script>
+<script src="../../../common/lib/fastclick.js"></script>
+<script>
+    $(function () {
+        FastClick.attach(document.body);
+    });
+</script>
+<script src="../../../common/js/jquery-weui.js"></script>
+
+</body>
+
+</html>
