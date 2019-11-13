@@ -853,6 +853,13 @@ public class DateUtil {
         return c.getTime();
     }
 
+    /**
+     * 获取年月日时分秒时间戳
+     * @return
+     */
+    public static String getCurrentTimeStamp(){
+        return (System.currentTimeMillis()+"").substring(0,10);
+    }
 
     public static void main(String[] args) {
         try {
@@ -860,7 +867,7 @@ public class DateUtil {
             System.out.println();
 
         } catch (Exception e) {
-            // TODO: handle exception
+
         }
 
     }

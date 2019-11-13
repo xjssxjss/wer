@@ -1,5 +1,6 @@
 package com.wer.util;
 
+import com.wer.common.BaseObject;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
@@ -20,10 +21,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
-public class HttpClientUtil {
+public class HttpClientUtil extends BaseObject{
 
 	public static String doGet(String url, Map<String, String> param) {
-
 		// 创建Httpclient对象
 		CloseableHttpClient httpclient = HttpClients.createDefault();
 

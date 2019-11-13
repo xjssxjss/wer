@@ -1,6 +1,7 @@
 package com.wer.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.wer.common.BaseObject;
 import com.wer.service.WxService;
 import com.wer.util.aes.WXBizMsgCrypt;
 import org.slf4j.Logger;
@@ -10,14 +11,17 @@ import sun.misc.BASE64Decoder;
 import javax.servlet.http.HttpServletRequest;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
  * Created by Sean on 2019-8-3.
  */
-public class WxUtil {
+public class WxUtil extends BaseObject{
     
     private static Logger logger = LoggerFactory.getLogger(WxUtil.class);
 
@@ -143,5 +147,19 @@ public class WxUtil {
 
         logger.info("我的信息:"+result);
         return builder.toString();
+    }
+
+    /**
+     * 获取sign签名
+     * @param timestamp
+     * @return
+     */
+    public static String getSign(String timestamp){
+        //获取应用key
+        String appKey = resourceMap.get("app_key");
+        //获取应用secret
+        String appSecret = resourceMap.get("app_secret");
+        //获取年月日时分秒
+        return MD5Util.getMd5Value(appKey+appSecret+timestamp).substring(8,24).toUpperCase();
     }
 }

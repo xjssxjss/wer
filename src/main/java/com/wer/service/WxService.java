@@ -15,6 +15,7 @@ import com.wer.entity.visa.VisaArticle;
 import com.wer.service.base.BaseService;
 import com.wer.service.visa.VisaClaimService;
 import com.wer.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -42,12 +43,10 @@ import java.util.Map;
  * @version: V1.0
  */
 @Service
+@Slf4j
 public class WxService extends BaseService{
 
-    private static Logger logger = LoggerFactory.getLogger(WxService.class);
-
     private static AccessToken accessToken;
-
     @Autowired
     private VisaClaimService visaClaimService;
 
@@ -91,7 +90,6 @@ public class WxService extends BaseService{
         stream.processAnnotations(NewsMessage.class);
 
         System.out.println(baseMessage.toString());
-        logger.info("被动回复的xml信息:{}" + stream.toXML(baseMessage));
 
         return stream.toXML(baseMessage);
     }
@@ -151,10 +149,20 @@ public class WxService extends BaseService{
         BaseMessage baseMessage = null;
         //获取事件类型
         String event = requestMap.get("Event");
+        //visa_query_click
 
         switch (event) {
             case "click":
-                String mediaId = "";
+                String eventKey = requestMap.get("EventKey");
+                //获取eventKey
+                if(GlobalConstant.MSG_QUERY_CLICK.equals(eventKey)){
+                    //公告查询点击
+                    baseMessage = new TextMessage(requestMap,"请回复“g公告标题”,例如“g领馆”,注意:根据输入的条件,只可查询最近八条公告信息,需要查询更多请输入详细公告标题名称或者到专管员平台进行查看");
+                } else if(GlobalConstant.VISA_QUERY_CLICK.equals(eventKey)){
+                    //护照签证查询点击
+                    baseMessage = new TextMessage(requestMap,"请回复“v国家名称”,例如“v美国”");
+                }
+                /*String mediaId = "";
                 String result = HttpClientUtil.doGet(PropertiesListenerConfig.getProperty("get_join_qr_code").replace("ACCESS_TOKEN", WxService.getAccessToken()).replace("SIZE_TYPE", "2"));
 
                 logger.info("获取加入企业微信二维码结果:{}" + result);
@@ -166,7 +174,7 @@ public class WxService extends BaseService{
                     //获取二维码链接
                     String joinQrcode = (String) object.get("join_qrcode");
                     baseMessage = new TextMessage(requestMap, joinQrcode);
-                }
+                }*/
                 //Image image = new Image("");
                 // baseMessage = new ImageMessage(requestMap,image);
                 break;
@@ -184,42 +192,47 @@ public class WxService extends BaseService{
      * @return
      */
     private BaseMessage dealTextMessage(Map<String, String> requestMap) {
+
+        String content = requestMap.get("Content");
+
+        String subContent = content.substring(1,content.length());
+
         List<Article> articleList = new ArrayList<>();
         Article article = null;
         BaseMessage baseMessage = null;
         String[] visaCountrys = resourceMap.get("visa_countrys").split(",");
         String redirectUrl = null;
 
-        for (String visaCountry : visaCountrys) {
-            if (visaCountry.equals(requestMap.get("Content"))) {
-                //通过公司名称获取VisaArticle对象信息
-                Map<String,Object> visaArticleObject = visaClaimService.queryVisaArticleByCountryName(requestMap.get("Content"));
+        //说明查询的是国家护照签证信息
+        if(!StringUtil.isEmpty(content) && content.startsWith("v")){
+            for (String visaCountry : visaCountrys) {
+                if (visaCountry.equals(subContent)) {
+                    //通过公司名称获取VisaArticle对象信息
+                    Map<String,Object> visaArticleObject = visaClaimService.queryVisaArticleByCountryName(subContent);
 
-                //如果访问成功
-                if((Boolean)visaArticleObject.get("success")){
-                    Map<String,Object> paramMap = new HashMap<>();
-                    //获取VisaArticle对象
-                    VisaArticle visaArticle = (VisaArticle)visaArticleObject.get("data");
-                    paramMap.put("slipId",visaArticle.getId());
-                    //根据slip_id查询附件信息
-                    Attachment attachment = attachmentMapper.queryByParams(paramMap).get(0);
-                    article = new Article(
-                            "签证要求 - "+visaArticle.getTitle()+"("+DateUtil.parseDateToStr(visaArticle.getEffectiveDate(),DateUtil.DATE_FORMAT_YY_MM_DD)+")",
-                            null,
-                            //"https://ss3.baidu.com/-rVXeDTa2gU2pMbgoY3K/it/u=3483030207,3924941481&fm=202&mola=new&crop=v1",
-                            resourceMap.get("server_url")+attachment.getFilePath()+attachment.getFileSaveName(),
-                            visaArticle.getUrl()+requestMap.get("Content"));
+                    //如果访问成功
+                    if((Boolean)visaArticleObject.get("success")){
+                        Map<String,Object> paramMap = new HashMap<>();
+                        //获取VisaArticle对象
+                        VisaArticle visaArticle = (VisaArticle)visaArticleObject.get("data");
+                        paramMap.put("slipId",visaArticle.getId());
+                        //根据slip_id查询附件信息
+                        //Attachment attachment = attachmentMapper.queryByParams(paramMap).get(0);
+                        article = new Article(
+                                "签证要求 - "+visaArticle.getTitle()+"("+DateUtil.parseDateToStr(visaArticle.getEffectiveDate(),DateUtil.DATE_FORMAT_YY_MM_DD)+")",
+                                null,
+                                "https://ss3.baidu.com/-rVXeDTa2gU2pMbgoY3K/it/u=3483030207,3924941481&fm=202&mola=new&crop=v1",
+                                visaArticle.getUrl()+content.substring(1,content.length()));
+                    }
+                    articleList.add(article);
+                    baseMessage = new NewsMessage(requestMap, articleList);
+                    break;
                 }
-                logger.info("article:"+article);
-                articleList.add(article);
-                baseMessage = new NewsMessage(requestMap, articleList);
-                break;
             }
-        }
-
-        if(null == baseMessage){
+        } else if(!StringUtil.isEmpty(content) && content.startsWith("g")){
+            //查询的是公告信息
             try {
-                JSONArray array = WebServiceClientUtil.callWebService("sayHello",requestMap.get("Content"));
+                JSONArray array = WebServiceClientUtil.callWebService("queryMessageList",subContent);
 
                 //循环数组对象
                 for(int i = 0 ; i< array.size() ; i ++){
@@ -227,10 +240,10 @@ public class WxService extends BaseService{
                     if(i<=7){
                         JSONObject object = (JSONObject) array.get(i);
                         //拼接点击访问链接
-                        redirectUrl = resourceMap.get("server_url")+resourceMap.get("redirect_to_msg_detail").replace("MSG_ID",(String)object.get("stMessageId"));
+                        redirectUrl = resourceMap.get("server_url")+resourceMap.get("redirect_to_msg_detail").replace("MSG_ID",(String)object.get("stMessageId")).replace("SIGN",WxUtil.getSign(DateUtil.getCurrentTimeStamp())).replace("TIMESTAMP",DateUtil.getCurrentTimeStamp());
                         article = new Article(
                                 (String)object.get("stTitle"),
-                                 null,
+                                null,
                                 "https://ss3.baidu.com/-rVXeDTa2gU2pMbgoY3K/it/u=3483030207,3924941481&fm=202&mola=new&crop=v1",
                                 redirectUrl);
                         articleList.add(article);
@@ -243,9 +256,11 @@ public class WxService extends BaseService{
             //articleList不为空
             if(null != articleList && articleList.size()>0){
                 baseMessage = new NewsMessage(requestMap,articleList);
-            } else {
-                baseMessage = new TextMessage(requestMap, "输入的国家或者公告标题有误，请重新输入");
             }
+        }
+
+        if(null == baseMessage){
+            baseMessage = new TextMessage(requestMap, "输入的国家或者公告标题有误 请重新输入");
         }
         return baseMessage;
     }

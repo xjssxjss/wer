@@ -9,9 +9,6 @@ public class GlobalConstant {
     //redis key分割符
     public static String KEY_SPLIT_CHAR = ":";
 
-    //入库单号前缀
-    public static String DN_SUFFIX = "SLCCK";
-
     //文件常用后缀
     public static final String PROP_SUFFIX = ".properties";
 
@@ -28,4 +25,14 @@ public class GlobalConstant {
 
     //附件类型
     public static final String FILE_TYPE = "FILE_TYPE";
+
+    /**
+     * clickKey
+     */
+    public static final String MSG_QUERY_CLICK = "msg_query_click";
+
+    public static final String VISA_QUERY_CLICK = "visa_query_click";
+
+    public static final String INTER_URIS_STR = "/wer/messageController/queryMessageByMsgId,";
+
 }

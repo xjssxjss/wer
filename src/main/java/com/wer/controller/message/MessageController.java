@@ -33,7 +33,8 @@ public class MessageController {
      * @return 跳转公告详情界面
      */
     @GetMapping(value = "queryMessageByMsgId")
-    public String queryMessageByMsgId(Model model, @RequestParam(value = "msgId") String msgId){
+    public String queryMessageByMsgId(Model model,
+                                      @RequestParam(value = "msgId") String msgId){
         //查询message信息
         model.addAttribute("msg",messageService.queryMessageByMsgId(msgId));
         return "msg/msg_detail";
