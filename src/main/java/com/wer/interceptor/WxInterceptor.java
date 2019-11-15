@@ -33,8 +33,6 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
 
         logger.info("执行业务之前调用>>>>>>>>>>>>>>>>>>>>>>>>>>");
-        logger.info("request.getParameter(\"sign\")"+request.getParameter("sign"));
-
         //getSign
         String sign = request.getParameter("sign");
         String timestamp = request.getParameter("timestamp");
@@ -50,10 +48,8 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                     long stamp = Long.valueOf(timestamp);
                     //判断签名是否有效
                     if(sign.equals(WxUtil.getSign(timestamp))){
-                        logger.info("正确");
                         return true;
                     } else {
-                        logger.info("签名无效");
                         throw new BusinessException(ResultCode.getResult(401));
                     }
                 } else {

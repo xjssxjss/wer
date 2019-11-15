@@ -1,5 +1,6 @@
 package com.wer.controller.message;
 
+import com.wer.common.GlobalConstant;
 import com.wer.service.MessageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,6 +11,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Map;
+
 /**
  * @description: 获取公告信息控制类
  * @package_name: com.wer.controller
@@ -17,7 +20,6 @@ import org.springframework.web.bind.annotation.RequestParam;
  * @author: Sean
  * @version: V1.0
  */
-
 @Controller
 @RequestMapping(value = "messageController")
 public class MessageController {
@@ -37,6 +39,6 @@ public class MessageController {
                                       @RequestParam(value = "msgId") String msgId){
         //查询message信息
         model.addAttribute("msg",messageService.queryMessageByMsgId(msgId));
-        return "msg/msg_detail";
+        return GlobalConstant.MSG_DETAIL;
     }
 }

@@ -1,5 +1,6 @@
 package com.wer.controller;
 
+import com.wer.common.GlobalConstant;
 import com.wer.service.WxService;
 import com.wer.service.sys.DictionaryEntriesService;
 import com.wer.util.StringUtil;
@@ -40,7 +41,7 @@ public class PageController {
     @RequestMapping(value = "index")
     public String index(){
         dictionaryEntriesService.queryDictionaryEntriesByCode();
-        return "apec/grid";
+        return GlobalConstant.GRID;
     }
 
     /**
@@ -49,13 +50,16 @@ public class PageController {
      * @return
      */
     @RequestMapping(value = "visaClaim")
-    public String visaClaim(@RequestParam(name = "countryName",required = true) String countryName,Model model){
+    public String visaClaim(@RequestParam(name = "countryName",required = true)
+                            String countryName,
+                            Model model){
         logger.info("countryName::"+countryName);
-        return "visa/visa_claim";
+        return GlobalConstant.VISA_CLAIM;
     }
 
     @RequestMapping(value = "signIn")
-    public void signIn(HttpServletRequest request, HttpServletResponse response){
+    public void signIn(HttpServletRequest request,
+                       HttpServletResponse response){
         /**
          * signature	微信加密签名，signature结合了开发者填写的token参数和请求中的timestamp参数、nonce参数。
          timestamp	时间戳

@@ -5,11 +5,22 @@
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
     <title th:text="${msg.stTitle}"></title>
     <link rel="stylesheet" th:href="@{/common/lib/weui.min.css}"/>
+    <style type="text/css">
+
+    </style>
 </head>
 
 <body ontouchstart class="page">
     <div class="page-bd">
         <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">执行日期</div>
+                <div class="weui-cell__ft" th:text="${msg.dtPublish}"></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">结束日期</div>
+                <div class="weui-cell__ft" th:text="${msg.dtClose}"></div>
+            </div>
             <div class="weui-cell">
                 <div class="weui-cell__bd" th:utext="${msg.clText}"></div>
             </div>

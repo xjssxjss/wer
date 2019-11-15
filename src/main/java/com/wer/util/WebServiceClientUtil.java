@@ -18,32 +18,30 @@ import javax.xml.namespace.QName;
  * @author: Sean
  * @version: V1.0
  */
-public class WebServiceClientUtil extends BaseObject{
+public class WebServiceClientUtil{
 
     //声明连接url
     private static String portUrl = null;
 
     static{
-        portUrl = resourceMap.get("apec_data_econciliation_url");
+        portUrl = PropertiesListenerConfig.getProperty("apec_data_econciliation_url");
     }
 
     private Client objClient = null;
 
-    private static final WebServiceClientUtil _uniqueInstance = new WebServiceClientUtil();
+    private static WebServiceClientUtil _uniqueInstance = null;
 
-    private WebServiceClientUtil(){
-        //if(objClient == null){
-            String wsUrl = portUrl;
-            if(!wsUrl.toLowerCase().endsWith("?wsdl")){
-                wsUrl = wsUrl + "?wsdl";
-            }
-            DynamicClientFactory objDynamicClientFactory = JaxWsDynamicClientFactory.newInstance();
-            objClient = objDynamicClientFactory.createClient(wsUrl);
-        //}
+    private WebServiceClientUtil() throws Exception{
+        String wsUrl = portUrl;
+        if(!wsUrl.toLowerCase().endsWith("?wsdl")){
+            wsUrl = wsUrl + "?wsdl";
+        }
+        DynamicClientFactory objDynamicClientFactory = JaxWsDynamicClientFactory.newInstance();
+        objClient = objDynamicClientFactory.createClient(wsUrl);
     }
 
     //获取对象实例
-    public static WebServiceClientUtil getInstance(){
+    public static WebServiceClientUtil getInstance() throws Exception{
         return new WebServiceClientUtil();
     }
 

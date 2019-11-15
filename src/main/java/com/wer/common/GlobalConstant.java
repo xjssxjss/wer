@@ -35,4 +35,14 @@ public class GlobalConstant {
 
     public static final String INTER_URIS_STR = "/wer/messageController/queryMessageByMsgId,";
 
+
+    /**
+     * 跳转界面
+     */
+    //护照签证要求
+    public static final String VISA_CLAIM = "visa/visa_claim";
+    //
+    public static final String GRID = "apec/grid";
+    //公告详情界面
+    public static final String MSG_DETAIL = "msg/msg_detail";
 }

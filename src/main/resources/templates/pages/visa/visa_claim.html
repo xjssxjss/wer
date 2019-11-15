@@ -11,8 +11,8 @@
 
     <style>
         .title_color{
-            color: darkgray;
-            font-weight: lighter;
+            color: gray;
+            font-weight: 300;
         }
     </style>
 </head>
@@ -24,7 +24,8 @@
             <div class="weui-cell__bd">
                 <p>国家</p>
             </div>
-            <div class="weui-cell__ft" th:text="${person.name}"></div>
+            <!--th:text="${person.name}"-->
+            <div class="weui-cell__ft">俄罗斯</div>
         </div>
         <div class="weui-cell">
             <div class="weui-cell__bd">
@@ -171,5 +172,4 @@
 <script src="../../../common/js/jquery-weui.js"></script>
 
 </body>
-
 </html>

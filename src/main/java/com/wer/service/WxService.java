@@ -4,6 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.thoughtworks.xstream.XStream;
+import com.wer.common.BusinessException;
 import com.wer.common.GlobalConstant;
 import com.wer.entity.AccessToken;
 import com.wer.entity.base.BaseMessage;
@@ -12,6 +13,7 @@ import com.wer.entity.msg.TextMessage;
 import com.wer.entity.msg.child.Article;
 import com.wer.entity.sys.Attachment;
 import com.wer.entity.visa.VisaArticle;
+import com.wer.enums.ResultCode;
 import com.wer.service.base.BaseService;
 import com.wer.service.visa.VisaClaimService;
 import com.wer.util.*;
@@ -250,7 +252,7 @@ public class WxService extends BaseService{
                     }
                 }
             } catch (Exception e){
-                e.printStackTrace();
+                baseMessage = new TextMessage(requestMap, ResultCode.getResult(405));
             }
 
             //articleList不为空
