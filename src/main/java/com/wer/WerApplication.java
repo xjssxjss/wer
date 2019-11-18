@@ -27,11 +27,6 @@ public class WerApplication extends SpringBootServletInitializer implements WebM
 		logger.info("wer启动结束>>>>>>>>>>>>>>>>>>>>>>");
 	}
 
-	@Override
-	protected final SpringApplicationBuilder configure(final SpringApplicationBuilder application) {
-		return application.sources(WerApplication.class);
-	}
-
 	/**
 	 * 全局拦截器
 	 * @param registry
@@ -41,5 +36,10 @@ public class WerApplication extends SpringBootServletInitializer implements WebM
 		// addPathPatterns 用于添加拦截规则
 		// excludePathPatterns 用户排除拦截
 		registry.addInterceptor(new WxInterceptor()).addPathPatterns("/**");
+	}
+
+	@Override
+	protected final SpringApplicationBuilder configure(final SpringApplicationBuilder application) {
+		return application.sources(WerApplication.class);
 	}
 }
