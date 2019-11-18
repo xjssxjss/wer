@@ -10,7 +10,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**
- * @description: TODO
+ * @description: 任务调度类
  * @package_name: com.wer.common
  * @data: 2019-10-22 14:33
  * @author: Sean
@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 public class ScheduledTask extends BaseObject{
     private static Logger logger = LoggerFactory.getLogger(ScheduledTask.class);
 
-    @Scheduled(cron = "*/10 * * * * ?")
+    //@Scheduled(cron = "*/10 * * * * ?")
     public void getWebServiceInfo(){
         logger.info("获取WebServiceddddInfo文件>>>>>>>>>>>>>>>>"+ resourceMap.get("apec_data_econciliation_url"));
     }
@@ -28,7 +28,7 @@ public class ScheduledTask extends BaseObject{
     /**
      * 获取部门列表
      */
-    @Scheduled(cron = "*/20 * * * * ?")
+    //@Scheduled(cron = "*/20 * * * * ?")
     public void getPartList(){
         logger.info("获取token>>>>>>>>>>>>>>>>>>>>"+ WxService.getAccessToken());
         logger.info("get_part_list_url"+PropertiesListenerConfig.getProperty("get_part_list_url"));
@@ -38,7 +38,7 @@ public class ScheduledTask extends BaseObject{
     /**
      * 获取部门列表
      */
-    @Scheduled(cron = "*/20 * * * * ?")
+    //@Scheduled(cron = "*/20 * * * * ?")
     public void getJoinQrCode(){
         logger.info("获取QRCODE::"+ WxService.getAccessToken());
         //String result = HttpClientUtil.doGet(PropertiesListenerConfig.getProperty("get_join_qr_code").replace("ACCESS_TOKEN",WxService.getAccessToken()).replace("SIZE_TYPE","2"));
@@ -48,7 +48,7 @@ public class ScheduledTask extends BaseObject{
     /**
      * 获取部门成员
      */
-    @Scheduled(cron = "*/20 * * * * ?")
+    //@Scheduled(cron = "*/20 * * * * ?")
     public void getUsersByGroup(){
         logger.info("获取部门成员>>>>>>>>>>>>>"+ WxService.getAccessToken());
         //String result = HttpClientUtil.doGet(PropertiesListenerConfig.getProperty("get_detail_user_by_part").replace("ACCESS_TOKEN",WxService.getAccessToken()).replace("DEPARTMENT_ID","1").replace("FETCH_CHILD","1"));

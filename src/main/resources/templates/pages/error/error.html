@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>错误界面</title>
+
+    <link rel="stylesheet" th:href="@{/common/lib/weui.min.css}"/>
+    <link rel="stylesheet" th:href="@{/common/css/jquery-weui.css}"/>
+
+    <script th:src="@{/common/js/jquery-2.1.4.js}"></script>
+    <script th:src="@{/common/js/fastclick.js}"></script>
+</head>
+<body ontouchstart class="page">
+    <div class="weui-footer">
+        <p class="weui-footer__text"><i class="weui-icon-cancel" th:text="${error.errMsg}"></i></p>
+    </div>
+
+    <!--<div class="page-bd">-->
+        <!--<div class="weui-cells">-->
+            <!--<a class="weui-btn weui-btn_primary" th:href="|javascript:close()|">关闭</a>-->
+        <!--</div>-->
+    <!--</div>-->
+
+    <!--底部栏-->
+    <div class="weui-footer">
+        <p class="weui-footer_fixed-bottom">Copyright © 2019-2029</p>
+    </div>
+</body>
+<!-- js事件 -->
+<script type="text/javascript">
+    //关闭当前窗口
+    function close(){
+        window.close();
+    }
+</script>
+</html>

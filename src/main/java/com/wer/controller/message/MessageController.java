@@ -23,8 +23,6 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "messageController")
 public class MessageController {
-    private static Logger logger = LoggerFactory.getLogger(MessageController.class);
-
     @Autowired
     private MessageService messageService;
 

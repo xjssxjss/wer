@@ -17,14 +17,11 @@ import com.wer.enums.ResultCode;
 import com.wer.service.base.BaseService;
 import com.wer.service.visa.VisaClaimService;
 import com.wer.util.*;
-import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
 import org.dom4j.io.SAXReader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -45,7 +42,6 @@ import java.util.Map;
  * @version: V1.0
  */
 @Service
-@Slf4j
 public class WxService extends BaseService{
 
     private static AccessToken accessToken;
@@ -218,13 +214,15 @@ public class WxService extends BaseService{
                         //获取VisaArticle对象
                         VisaArticle visaArticle = (VisaArticle)visaArticleObject.get("data");
                         paramMap.put("slipId",visaArticle.getId());
+                        String url = visaArticle.getUrl()+content.substring(1,content.length());
                         //根据slip_id查询附件信息
                         //Attachment attachment = attachmentMapper.queryByParams(paramMap).get(0);
                         article = new Article(
                                 "签证要求 - "+visaArticle.getTitle()+"("+DateUtil.parseDateToStr(visaArticle.getEffectiveDate(),DateUtil.DATE_FORMAT_YY_MM_DD)+")",
                                 null,
                                 "https://ss3.baidu.com/-rVXeDTa2gU2pMbgoY3K/it/u=3483030207,3924941481&fm=202&mola=new&crop=v1",
-                                visaArticle.getUrl()+content.substring(1,content.length()));
+                                        url
+                                );
                     }
                     articleList.add(article);
                     baseMessage = new NewsMessage(requestMap, articleList);
@@ -262,7 +260,7 @@ public class WxService extends BaseService{
         }
 
         if(null == baseMessage){
-            baseMessage = new TextMessage(requestMap, "输入的国家或者公告标题有误 请重新输入");
+            baseMessage = new TextMessage(requestMap, "您输入的国家或者公告标题有误,请重新输入");
         }
         return baseMessage;
     }
