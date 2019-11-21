@@ -3,6 +3,7 @@ package com.wer.interceptor;
 import com.wer.common.BusinessException;
 import com.wer.common.GlobalConstant;
 import com.wer.enums.ResultCode;
+import com.wer.util.DateUtil;
 import com.wer.util.StringUtil;
 import com.wer.util.WxUtil;
 import org.slf4j.Logger;
@@ -31,7 +32,7 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                              Object handler) throws Exception {
 
         //getSign
-        /*String sign = request.getParameter("sign");
+        String sign = request.getParameter("sign");
         String timestamp = request.getParameter("timestamp");
 
         System.out.println("请求地址>>>>>>>>>>>>>>>>>:"+request.getRequestURI());
@@ -43,17 +44,24 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                 //判断传递的时间戳是否为null
                 if(!StringUtil.isEmpty(timestamp)){
                     long stamp = Long.valueOf(timestamp);
-                    //判断签名是否有效
-                    if(sign.equals(WxUtil.getSign(timestamp))){
-                        return true;
+                    System.out.println("传递的时间戳:"+(stamp + (60)));
+                    System.out.println("当前的时间戳:"+Long.valueOf(DateUtil.getCurrentTimeStamp()));
+                    //消息有效期24H
+                    if((stamp + (60)) >= Long.valueOf(DateUtil.getCurrentTimeStamp())){
+                        //*60*24
+                        //判断签名是否有效
+                        if(sign.equals(WxUtil.getSign(timestamp))){
+                            return true;
+                        } else {
+                            throw new BusinessException(ResultCode.getResult(401));
+                        }
                     } else {
-                        throw new BusinessException(ResultCode.getResult(401));
+                        //时间戳失效
+                        throw new BusinessException(ResultCode.getResult(407));
                     }
-                } else {
-                    throw new BusinessException(ResultCode.getResult(402));
                 }
             }
-        }*/
+        }
 //        if(handler instanceof HandlerMethod){
 //            HandlerMethod hm = (HandlerMethod) handler;
 //            System.out.println("当前执行的对象是"+hm.getMethod());

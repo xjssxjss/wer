@@ -1,13 +1,12 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:include="/common/header::header('签证要求')">
-    <style>
-        .title_color{
-            color: gray;
-            font-weight: 300;
-        }
-    </style>
-</head>
+<head th:include="/common/header::header('签证要求')"></head>
+<style>
+    .title_color{
+        color: gray;
+        font-weight: 400;
+    }
+</style>
 
 <body ontouchstart class="page">
 <div class="page-bd">
@@ -149,8 +148,6 @@
             <div class="weui-cell__ft" th:text="${visaInfo.pubDate}">2019-03-29</div>
         </div>
 
-        <div th:replace="/common/footer::footer"></div>
-
         <!--<div class="weui-cell">
             <div class="weui-cell__bd">
                 <p>签证表格</p>
@@ -162,10 +159,10 @@
         </div>-->
     </div>
 </div>
+<br/>
+<div th:replace="/common/footer::footer"></div>
+</body>
 
-<script th:src="@{/common/lib/jquery-2.1.4.js}"></script>
-<script th:src="@{/common/lib/fastclick.js}"></script>
-<script th:src="@{/common/js/jquery-weui.js}"></script>
 <script>
     $(function () {
         FastClick.attach(document.body);
@@ -188,10 +185,8 @@
 
     /*document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
 
-        WeixinJSBridge.call('showOptionMenu');//显示右上角菜单
+     WeixinJSBridge.call('showOptionMenu');//显示右上角菜单
 
-    });*/
+     });*/
 </script>
-
-</body>
 </html>

@@ -5,7 +5,8 @@ public enum ResultCode {
     FAIL(400,"失败"),                  //失败
     UNAUTHORIZED(401,"签名错误"),          //未认证（签名错误）
     TIMESTAMP_INVALID(402,"时间戳不合法"),
-    NOT_FOUND(404,"接口不存在"),             //接口不存在
+    NOT_FOUND(404,"接口不存在"),             //接口不存在,
+    TIMESTAMP_TIME_OUT(407,"时间戳已失效"), //说明时间戳已超过24H
     WEBSERVICE_CONN_FAIL(405,"服务接口连接失败"),
     VISA_COUNTRY_NOT_FOUNT(408,"签证要求国家未匹配,请重新输入"),
     INTERNAL_SERVER_ERROR(500,"服务器内部错误"); //服务器内部错误

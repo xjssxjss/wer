@@ -1,39 +1,22 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <title>错误界面</title>
-
-    <link rel="stylesheet" th:href="@{/common/lib/weui.min.css}"/>
-    <link rel="stylesheet" th:href="@{/common/css/jquery-weui.css}"/>
-
-    <script th:src="@{/common/js/jquery-2.1.4.js}"></script>
-    <script th:src="@{/common/js/fastclick.js}"></script>
-</head>
+<head th:include="/common/header::header('错误界面')"></head>
 <body ontouchstart class="page">
+
     <div class="weui-msg">
-        <div class="weui-msg__icon-area">
-            <i class="weui-icon-error weui-icon_msg"></i></div>
+        <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
         <div class="weui-msg__text-area">
             <h2 class="weui-msg__title">操作失败</h2>
-            <p class="weui-footer__text"><i class="weui-icon-cancel" th:text="${error.errMsg}"></i></p>
+            <p class="weui-msg__desc">获取信息失败，失败原因:
+                <span th:text="${error.errMsg}"></span>
+            </p>
         </div>
-        <div class="weui-msg__extra-area">
-            <div class="weui-footer">
-                <p class="weui-footer__links">
-                    <a href="javascript:void(0);" class="weui-footer__link">Copyright © 2019-2026</a>
-                </p>
-            </div>
+        <div class="weui-msg__opr-area">
+            <p class="weui-btn-area">
+                <a class="weui-btn weui-btn_primary" th:href="|javascript:close()|">关闭</a>
+            </p>
         </div>
     </div>
-
-    <!--<div class="page-bd">-->
-        <!--<div class="weui-cells">-->
-            <!--<a class="weui-btn weui-btn_primary" th:href="|javascript:close()|">关闭</a>-->
-        <!--</div>-->
-    <!--</div>-->
-    <!--底部栏-->
 </body>
 <!-- js事件 -->
 <script type="text/javascript">
