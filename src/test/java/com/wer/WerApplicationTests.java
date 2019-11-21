@@ -14,13 +14,6 @@ public class WerApplicationTests {
 
     @Test
     public void testList(){
-        List list=  new ArrayList();
-        list.add("1");
-        list.add("2");
-        list.add("3");
 
-        list.stream().forEach((item)->{
-            System.out.println(item);
-        });
     }
 }

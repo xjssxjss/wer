@@ -1,8 +1,12 @@
-package com.wer.controller;
+package com.wer.controller.wx;
 
+import com.wer.common.BusinessException;
 import com.wer.common.GlobalConstant;
-import com.wer.service.WxService;
+import com.wer.controller.base.BaseController;
+import com.wer.enums.ResultCode;
+import com.wer.service.wx.WxService;
 import com.wer.service.sys.DictionaryEntriesService;
+import com.wer.util.HttpClientUtil;
 import com.wer.util.StringUtil;
 import com.wer.util.WxUtil;
 import org.apache.cxf.helpers.IOUtils;
@@ -11,17 +15,20 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.util.Map;
 
 /**
- * @description: TODO
+ * @description: 微信核心控制层
  * @package_name: com.wer.controller
  * @data: 2019-10-22 9:39
  * @author: Sean
@@ -29,9 +36,10 @@ import java.io.PrintWriter;
  */
 @Controller
 @RequestMapping(value = "indexController")
-public class PageController {
+public class WxController extends BaseController{
 
-    private static Logger logger = LoggerFactory.getLogger(PageController.class);
+    private static Logger logger = LoggerFactory.getLogger(WxController.class);
+
     @Autowired
     private WxService wxService;
 
@@ -50,10 +58,18 @@ public class PageController {
      * @return
      */
     @RequestMapping(value = "visaClaim")
-    public String visaClaim(@RequestParam(name = "countryName",required = true)
+    public String visaClaim(@RequestParam(name = "countryName")
                             String countryName,
                             Model model){
         logger.info("countryName::"+countryName);
+
+        Map<String,Object> map = GlobalConstant.visaDataMap;
+
+        model.addAttribute("visaInfo",map.get(countryName));
+
+        if(null == map.get(countryName)){
+            throw new BusinessException(ResultCode.getResult(408));
+        }
         return GlobalConstant.VISA_CLAIM;
     }
 
@@ -111,6 +127,35 @@ public class PageController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+    }
+
+    /**
+     * 企业微信同意协议并授权跳转界面
+     * @return
+     */
+    @GetMapping(value = "agreement")
+    public String agreement(){
+        return GlobalConstant.AGREEMENT;
+    }
+
+    /**
+     * 授权访问回调方法
+     * @param code
+     * @param model
+     * @return
+     */
+    @GetMapping(value = "authorizeResponse")
+    public String authorizeResult(@RequestParam(value = "code") String code,
+                                  Model model){
+        Map<String,Object> resultMap = wxService.authorizeResult(code);
+        //成功
+        if((Boolean)resultMap.get("success")){
+            return GlobalConstant.AGREEMENT_SUCCESS;
+        } else {
+            //失败原因
+            model.addAttribute("message",resultMap.get("message"));
+            return GlobalConstant.AGREEMENT_ERROR;
         }
     }
 }

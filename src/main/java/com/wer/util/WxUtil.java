@@ -2,7 +2,7 @@ package com.wer.util;
 
 import com.alibaba.fastjson.JSONObject;
 import com.wer.common.BaseObject;
-import com.wer.service.WxService;
+import com.wer.service.wx.WxService;
 import com.wer.util.aes.WXBizMsgCrypt;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

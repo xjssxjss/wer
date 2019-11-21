@@ -26,16 +26,18 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
     private static Logger logger = LoggerFactory.getLogger(WxInterceptor.class);
 
     @Override
-    public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
+    public boolean preHandle(HttpServletRequest request,
+                             HttpServletResponse response,
+                             Object handler) throws Exception {
 
         //getSign
-        String sign = request.getParameter("sign");
+        /*String sign = request.getParameter("sign");
         String timestamp = request.getParameter("timestamp");
 
         System.out.println("请求地址>>>>>>>>>>>>>>>>>:"+request.getRequestURI());
         //GlobalConstant.INTER_URIS.
 
-        System.out.println("判断地址是否存在:::"+GlobalConstant.INTER_URIS_STR.contains(request.getRequestURI()));
+        System.out.println("判断地址是否存在>>>>>>>>>>>>>>>>>"+GlobalConstant.INTER_URIS_STR.contains(request.getRequestURI()));
         if(GlobalConstant.INTER_URIS_STR.contains(request.getRequestURI())){
             if(!StringUtil.isEmpty(sign)){
                 //判断传递的时间戳是否为null
@@ -51,8 +53,7 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                     throw new BusinessException(ResultCode.getResult(402));
                 }
             }
-        }
-
+        }*/
 //        if(handler instanceof HandlerMethod){
 //            HandlerMethod hm = (HandlerMethod) handler;
 //            System.out.println("当前执行的对象是"+hm.getMethod());
@@ -69,6 +70,14 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
 //            response.sendRedirect(request.getContextPath() + "/login.html");
 //            return false;
 //        }
+
+
+        System.out.println(request.getContextPath());
+        /*if(!GlobalConstant.AUTH_ALREADY.contains("xieyahui")){
+            response.sendRedirect( "http://192.168.0.115:9999/wer/auth/authorize");
+            return false;
+        }*/
+
         return true;// 只有返回true才会继续向下执行，返回false取消当前请求
     }
 

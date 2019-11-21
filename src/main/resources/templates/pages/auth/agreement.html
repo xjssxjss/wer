@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <title>协议阅读</title>
+
+    <link rel="stylesheet" th:href="@{/common/lib/weui.min.css}"/>
+    <link rel="stylesheet" th:href="@{/common/css/jquery-weui.css}"/>
+
+    <script th:src="@{/common/js/jquery-2.1.4.js}"></script>
+    <script th:src="@{/common/js/fastclick.js}"></script>
+
+    <style type="text/css">
+        .title_color {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body ontouchstart class="page">
+    <div class="weui-cells__title">使用应用须知</div>
+    <div class="weui-cells weui-cells_form">
+        <div class="weui-cell">
+            <div class="weui-cell__bd">
+                <h5 class="title_color">
+                    <p>
+                        1，向乙房申请购房贷款银行或贷款银行认可的机构提供符合要求的房屋资料以备查核.<br/>
+                        2，保证对出售的房屋拥有独立产权.如果该房屋为共有房屋，则必须取得其他所有共有人的同意出售书面文件.<br/>
+                        3，保证该出售房屋未予出租.因出租所产生的任何问题由甲方承担并负责解决.<br/>
+                        4，自签订本协议起，保证将该房屋按约定价格售给乙方，期间不得反悔或将房屋出售给第三人.<br/>
+                        5，按照前述业务的需要，及时签订各项合同文件和办理各种手续.<br/>
+                        6，自签订本协议起，保证将该房屋按约定价格售给乙方，期间不得反悔或将房屋出售给第三人.<br/>
+                        7，按照前述业务的需要，及时签订各项合同文件和办理各种手续.<br/>
+                        8，自签订本协议起，保证将该房屋按约定价格售给乙方，期间不得反悔或将房屋出售给第三人.
+                    </p>
+                </h5>
+            </div>
+        </div>
+    </div>
+
+    <!-- 阅读并同意协议begin -->
+    <div class="weui-cells weui-cells_checkbox">
+        <label class="weui-cell weui-check__label" for="readAndAgree">
+            <div class="weui-cell__hd">
+                <input type="checkbox" id="readAndAgree" class="weui-check" name="readAndAgree"/>
+                <i class="weui-icon-checked"></i>
+            </div>
+            <div class="weui-cell__bd">
+                <p>阅读并同意</p>
+            </div>
+        </label>
+    </div>
+    <!-- 阅读并同意协议end -->
+
+    <div class="weui-msg">
+        <div class="weui-msg__text-area">
+            <a href="javascript:;" id="confirm"
+               class="weui-btn weui-btn_disabled weui-btn_primary">提交</a>
+        </div>
+    </div>
+
+    <!-- 底部栏begin -->
+    <div class="weui-footer">
+        <p class="weui-footer_fixed-bottom">Copyright © 2019-2026</p>
+    </div>
+    <!-- 底部栏end -->
+</body>
+<script type="text/javascript">
+    let flag = false;
+    $(function () {
+        FastClick.attach(document.body);
+        <!-- 同意协议check事件begin -->
+        $('#readAndAgree').change(
+            function () {
+                flag = $('#readAndAgree').is(':checked');
+                //如果选中
+                if(flag){
+                    //设置href路径为https://open.weixin.qq.com/connect/oauth2/authorize?appid=ww276e0367e9eace3e&redirect_uri=http://spro.free.idcfengye.com/wer/indexController/authorizeResponse&response_type=code&scope=snsapi_userinfo&state=swb2019#wechat_redirect
+                    $('#confirm').removeClass('weui-btn_disabled');
+                    $('#confirm').attr('href','https://open.weixin.qq.com/connect/oauth2/authorize?appid=ww276e0367e9eace3e&redirect_uri=http://spro.free.idcfengye.com/wer/indexController/authorizeResponse&response_type=code&scope=snsapi_userinfo&state=swb2019#wechat_redirect');
+                } else {
+                    $('#confirm').addClass("weui-btn_disabled");
+                    $('#confirm').removeAttr("href");
+                }
+            }
+        );
+    });
+</script>
+</html>

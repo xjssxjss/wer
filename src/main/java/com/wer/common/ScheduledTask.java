@@ -1,12 +1,10 @@
 package com.wer.common;
 
-import com.wer.service.WxService;
+import com.wer.service.wx.WxService;
 import com.wer.util.HttpClientUtil;
 import com.wer.util.PropertiesListenerConfig;
-import com.wer.util.WebServiceClientUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 /**

@@ -1,4 +1,4 @@
-package com.wer.service;
+package com.wer.service.wx;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -29,10 +29,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.sql.Timestamp;
+import java.util.*;
 
 /**
  * @description: 微信服务类
@@ -45,6 +43,7 @@ import java.util.Map;
 public class WxService extends BaseService{
 
     private static AccessToken accessToken;
+
     @Autowired
     private VisaClaimService visaClaimService;
 
@@ -86,8 +85,6 @@ public class WxService extends BaseService{
         //设置需要转化为xml的对象
         stream.processAnnotations(TextMessage.class);
         stream.processAnnotations(NewsMessage.class);
-
-        System.out.println(baseMessage.toString());
 
         return stream.toXML(baseMessage);
     }
@@ -200,67 +197,87 @@ public class WxService extends BaseService{
         BaseMessage baseMessage = null;
         String[] visaCountrys = resourceMap.get("visa_countrys").split(",");
         String redirectUrl = null;
+        if(!GlobalConstant.userList.contains(requestMap.get("FromUserName"))){
+            baseMessage = new TextMessage(requestMap,"您好，请先进行<a href='http://192.168.0.115:9999/wer/indexController/agreement'>认证</a>");
+        } else {
+            //说明查询的是国家护照签证信息
+            if(!StringUtil.isEmpty(content) && content.startsWith("v")){
+                //获取文件服务器server uri
+                String imageServerUrl = resourceMap.get("image_server_url");
+                for (String visaCountry : visaCountrys) {
+                    if (visaCountry.equals(subContent)) {
+                        //通过公司名称获取VisaArticle对象信息
+                        Map<String,Object> visaArticleObject = visaClaimService.queryVisaArticleByCountryName(subContent);
 
-        //说明查询的是国家护照签证信息
-        if(!StringUtil.isEmpty(content) && content.startsWith("v")){
-            for (String visaCountry : visaCountrys) {
-                if (visaCountry.equals(subContent)) {
-                    //通过公司名称获取VisaArticle对象信息
-                    Map<String,Object> visaArticleObject = visaClaimService.queryVisaArticleByCountryName(subContent);
-
-                    //如果访问成功
-                    if((Boolean)visaArticleObject.get("success")){
-                        Map<String,Object> paramMap = new HashMap<>();
-                        //获取VisaArticle对象
-                        VisaArticle visaArticle = (VisaArticle)visaArticleObject.get("data");
-                        paramMap.put("slipId",visaArticle.getId());
-                        String url = visaArticle.getUrl()+content.substring(1,content.length());
-                        //根据slip_id查询附件信息
-                        //Attachment attachment = attachmentMapper.queryByParams(paramMap).get(0);
-                        article = new Article(
-                                "签证要求 - "+visaArticle.getTitle()+"("+DateUtil.parseDateToStr(visaArticle.getEffectiveDate(),DateUtil.DATE_FORMAT_YY_MM_DD)+")",
-                                null,
-                                "https://ss3.baidu.com/-rVXeDTa2gU2pMbgoY3K/it/u=3483030207,3924941481&fm=202&mola=new&crop=v1",
-                                        url
-                                );
-                    }
-                    articleList.add(article);
-                    baseMessage = new NewsMessage(requestMap, articleList);
-                    break;
-                }
-            }
-        } else if(!StringUtil.isEmpty(content) && content.startsWith("g")){
-            //查询的是公告信息
-            try {
-                JSONArray array = WebServiceClientUtil.callWebService("queryMessageList",subContent);
-
-                //循环数组对象
-                for(int i = 0 ; i< array.size() ; i ++){
-                    //把返回结果转化成JSONObject对象
-                    if(i<=7){
-                        JSONObject object = (JSONObject) array.get(i);
-                        //拼接点击访问链接
-                        redirectUrl = resourceMap.get("server_url")+resourceMap.get("redirect_to_msg_detail").replace("MSG_ID",(String)object.get("stMessageId")).replace("SIGN",WxUtil.getSign(DateUtil.getCurrentTimeStamp())).replace("TIMESTAMP",DateUtil.getCurrentTimeStamp());
-                        article = new Article(
-                                (String)object.get("stTitle"),
-                                null,
-                                "https://ss3.baidu.com/-rVXeDTa2gU2pMbgoY3K/it/u=3483030207,3924941481&fm=202&mola=new&crop=v1",
-                                redirectUrl);
+                        //如果访问成功
+                        if((Boolean)visaArticleObject.get("success")){
+                            Map<String,Object> paramMap = new HashMap<>();
+                            //获取VisaArticle对象
+                            VisaArticle visaArticle = (VisaArticle)visaArticleObject.get("data");
+                            paramMap.put("slipId",visaArticle.getId());
+                            String url = visaArticle.getUrl()+content.substring(1,content.length());
+                            //根据slip_id查询附件信息
+                            Attachment attachment = attachmentMapper.queryByParams(paramMap).get(0);
+                            //拼接图片路径
+                            String picUrl = imageServerUrl + attachment.getFilePath() + attachment.getFileSaveName();
+                            article = new Article(
+                                    "签证要求 - "+visaArticle.getTitle()+"("+DateUtil.parseDateToStr(visaArticle.getEffectiveDate(),DateUtil.DATE_FORMAT_YYYY_MM_DD)+")",
+                                    null,
+//                                    "https://ss3.baidu.com/-rVXeDTa2gU2pMbgoY3K/it/u=3483030207,3924941481&fm=202&mola=new&crop=v1",
+                                    picUrl,
+                                    url
+                            );
+                        }
                         articleList.add(article);
+                        baseMessage = new NewsMessage(requestMap, articleList);
+                        break;
                     }
                 }
-            } catch (Exception e){
-                baseMessage = new TextMessage(requestMap, ResultCode.getResult(405));
-            }
+            } else if(!StringUtil.isEmpty(content) && content.startsWith("g")){
+                //查询的是公告信息
+                try {
+                    JSONArray array = WebServiceClientUtil.callWebService("queryMessageList",subContent);
 
-            //articleList不为空
-            if(null != articleList && articleList.size()>0){
-                baseMessage = new NewsMessage(requestMap,articleList);
+                    //循环数组对象
+                    for(int i = 0 ; i< array.size() ; i ++){
+                        String sign = WxUtil.getSign(DateUtil.getCurrentTimeStamp());
+                        //把返回结果转化成JSONObject对象
+                        if(i<=7){
+                            JSONObject object = (JSONObject) array.get(i);
+
+                            new Timestamp(Long.valueOf(object.getString("dtPublish")));
+                            System.out.println(new Timestamp(Long.valueOf(object.getString("dtPublish"))));
+                            //获取发布日期
+                            String dtPublish = DateUtil.parseTimestampToStr(new Timestamp(Long.valueOf(object.getString("dtPublish"))),DateUtil.DATE_FORMAT_YYYY_MM_DD);
+
+                            //拼接点击访问链接
+                            redirectUrl =
+                                    resourceMap.get("server_url")+
+                                            resourceMap.get("redirect_to_msg_detail").replace("MSG_ID",
+                                                    (String)object.get("stMessageId")).replace("SIGN",sign).
+                                                    replace("TIMESTAMP",DateUtil.getCurrentTimeStamp());
+                            System.out.println(redirectUrl);
+                            article = new Article(
+                                    dtPublish+(String)object.get("stTitle"),
+                                    null,
+                                    "https://ss3.baidu.com/-rVXeDTa2gU2pMbgoY3K/it/u=3483030207,3924941481&fm=202&mola=new&crop=v1",
+                                    redirectUrl);
+                            articleList.add(article);
+                        }
+                    }
+                } catch (Exception e){
+                    baseMessage = new TextMessage(requestMap, ResultCode.getResult(405));
+                }
+
+                //articleList不为空
+                if(null != articleList && articleList.size()>0){
+                    baseMessage = new NewsMessage(requestMap,articleList);
+                }
             }
         }
 
         if(null == baseMessage){
-            baseMessage = new TextMessage(requestMap, "您输入的国家或者公告标题有误,请重新输入");
+            baseMessage = new TextMessage(requestMap, "您输入的信息未匹配,请重新输入");
         }
         return baseMessage;
     }
@@ -288,7 +305,6 @@ public class WxService extends BaseService{
         } catch (DocumentException e) {
             e.printStackTrace();
         }
-
         return xmlMap;
     }
 
@@ -354,5 +370,51 @@ public class WxService extends BaseService{
             getToken();
         }
         return accessToken.getAccessToken();
+    }
+
+    /**
+     * 通过用户授权code获取用户信息
+     * @param code
+     * @return
+     */
+    public Map<String,Object> authorizeResult(String code){
+        //获取用户信息url
+        String url = resourceMap.get("get_user_info_url");
+
+        //获取当前生效的token
+        String token = getAccessToken();
+        try{
+            //判断code是否为空
+            if(!StringUtil.isEmpty(code)){
+                //替换获取用户信息url
+                String getVisitInfoUrl = url.replace("ACCESS_TOKEN",token).replace("CODE",code);
+                System.out.println(getVisitInfoUrl);
+
+                //发起获取用户信息请求
+                String visitInfo = HttpClientUtil.doGet(getVisitInfoUrl);
+                //把返回的结果转化为JSONObject对象
+                JSONObject object = JSONObject.parseObject(visitInfo);
+
+                //判断访问微信api是否成功
+                if(getWxApiResult(object)){
+                    String userId = (String)object.get("UserId");
+                    //说明已经认证过了
+                    if(GlobalConstant.userList.contains(userId)){
+                        success = false;
+                        message = GlobalConstant.ALREADTY_AUTHORIZE;
+                    } else {
+                        success = true;
+                        message = GlobalConstant.SUCCESS_MESSAGE;
+                        data = userId;
+                        //把userId加入到集合中
+                        GlobalConstant.userList.add(userId);
+                    }
+                }
+            }
+        } catch (Exception e){
+            success = false;
+            message = e.getMessage();
+        }
+        return result();
     }
 }

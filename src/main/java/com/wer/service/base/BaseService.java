@@ -1,6 +1,7 @@
 package com.wer.service.base;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.wer.common.BaseObject;
 import com.wer.common.GlobalConstant;
@@ -45,12 +46,25 @@ public abstract class BaseService<T> extends BaseObject {
      */
     public Map<String,Object> result(){
         logger.info("返回对象数据:success:"+success+">message:"+message+">data:"+data);
-        synchronized (BaseService.class){
+        synchronized (resultMap){
             resultMap.put("success",success);
             resultMap.put("message",message);
             resultMap.put("data",success ? data: null);
         }
         return resultMap;
+    }
+
+    /**
+     * 判断微信api访问是否成功
+     * @param jsonObject
+     * @return
+     */
+    public boolean getWxApiResult(JSONObject jsonObject){
+        if(null != jsonObject && (0 == jsonObject.getIntValue("errcode"))){
+            return true;
+        } else {
+            throw new RuntimeException((String)jsonObject.get("errmsg"));
+        }
     }
 
     /**
