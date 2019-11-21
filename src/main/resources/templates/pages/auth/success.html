@@ -1,15 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <title>认证成功</title>
-
-    <link rel="stylesheet" th:href="@{/common/lib/weui.min.css}"/>
-    <link rel="stylesheet" th:href="@{/common/css/jquery-weui.css}"/>
-
-    <script th:src="@{/common/js/jquery-2.1.4.js}"></script>
-    <script th:src="@{/common/js/fastclick.js}"></script>
+<head th:include="/common/header::header('认证成功')">
 </head>
 <body ontouchstart class="page">
     <div class="weui-msg">

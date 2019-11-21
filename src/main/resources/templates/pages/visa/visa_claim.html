@@ -1,13 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <!--th:replace="common_head :: commonHeader('首页')"-->
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <title>签证要求</title>
-
-    <link rel="stylesheet" th:href="@{/common/lib/weui.min.css}"/>
-    <link rel="stylesheet" th:href="@{/common/css/jquery-weui.css}"/>
+<head th:include="/common/header::header('签证要求')">
     <style>
         .title_color{
             color: gray;
@@ -155,6 +148,8 @@
             </div>
             <div class="weui-cell__ft" th:text="${visaInfo.pubDate}">2019-03-29</div>
         </div>
+
+        <div th:replace="/common/footer::footer"></div>
 
         <!--<div class="weui-cell">
             <div class="weui-cell__bd">

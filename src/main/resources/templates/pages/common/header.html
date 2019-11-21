@@ -1,0 +1,14 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:fragment="header(title)">
+    <title th:text="${title}"></title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+
+    <link rel="stylesheet" th:href="@{/common/lib/weui.min.css}"/>
+    <link rel="stylesheet" th:href="@{/common/css/jquery-weui.css}"/>
+
+    <script th:src="@{/common/js/jquery-2.1.4.js}"></script>
+    <script th:src="@{/common/js/fastclick.js}"></script>
+</head>
+</html>
