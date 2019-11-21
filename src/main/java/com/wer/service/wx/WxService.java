@@ -371,7 +371,6 @@ public class WxService extends BaseService{
 
     /**
      * 获取通讯录accessToken
-     *
      * @return
      */
     public static String getAddressBookAccessToken() {
