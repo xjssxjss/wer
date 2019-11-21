@@ -19,7 +19,8 @@
 <script type="text/javascript">
     //关闭当前窗口
     function close(){
-        window.close();
+        document.addEventListener('WeixinJSBridgeReady', function(){ WeixinJSBridge.call('closeWindow'); }, false);
+        WeixinJSBridge.call('closeWindow');
     }
 </script>
 </html>

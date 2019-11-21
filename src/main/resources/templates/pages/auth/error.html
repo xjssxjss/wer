@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:include="/common/header::header('认证失败')">
+<head th:include="/common/header::header('认证结果')">
 </head>
 <body ontouchstart class="page">
     <div class="weui-msg">
@@ -18,4 +18,12 @@
         </div>
     </div>
 </body>
+<!-- js事件 -->
+<script type="text/javascript">
+    //关闭当前窗口
+    function close(){
+        document.addEventListener('WeixinJSBridgeReady', function(){ WeixinJSBridge.call('closeWindow'); }, false);
+        WeixinJSBridge.call('closeWindow');
+    }
+</script>
 </html>

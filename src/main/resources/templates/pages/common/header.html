@@ -10,7 +10,14 @@
 
     <script th:src="@{/common/js/jquery-2.1.4.js}"></script>
     <script th:src="@{/common/js/fastclick.js}"></script>
+    <script th:src="@{/common/js/jweixin-1.0.0.js}"></script>
     <script th:src="@{/common/js/swiper.js}"></script>
     <script th:src="@{/common/js/zepto.js}"></script>
 </head>
+<script type="text/javascript">
+    document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+        // 通过下面这个API隐藏右上角按钮
+        WeixinJSBridge.call('hideOptionMenu');
+    });
+</script>
 </html>

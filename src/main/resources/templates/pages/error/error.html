@@ -3,26 +3,49 @@
 <head th:include="/common/header::header('错误界面')"></head>
 <body ontouchstart class="page">
 
-    <div class="weui-msg">
-        <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
-        <div class="weui-msg__text-area">
-            <h2 class="weui-msg__title">操作失败</h2>
-            <p class="weui-msg__desc">获取信息失败，失败原因:
-                <span th:text="${error.errMsg}"></span>
-            </p>
-        </div>
-        <div class="weui-msg__opr-area">
-            <p class="weui-btn-area">
-                <a class="weui-btn weui-btn_primary" th:href="|javascript:close()|">关闭</a>
-            </p>
-        </div>
+<div class="weui-msg">
+    <div class="weui-msg__icon-area"><i class="weui-icon-warn weui-icon_msg"></i></div>
+    <div class="weui-msg__text-area">
+        <h2 class="weui-msg__title">操作失败</h2>
+        <p class="weui-msg__desc">获取信息失败，失败原因:
+            <span th:text="${error.errMsg}"></span>
+        </p>
     </div>
+    <div class="weui-msg__opr-area">
+        <p class="weui-btn-area">
+            <a class="weui-btn weui-btn_primary" th:href="|javascript:close()|">关闭</a>
+        </p>
+    </div>
+</div>
 </body>
 <!-- js事件 -->
 <script type="text/javascript">
+//    document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
+//        // 通过下面这个API隐藏右上角按钮
+//        WeixinJSBridge.call('hideOptionMenu');
+//    });
+    $(function () {
+        FastClick.attach(document.body);
+    });
+
+//    function onBridgeReady() {
+//        WeixinJSBridge.call('hideOptionMenu');
+//    }
+//
+//    if (typeof WeixinJSBridge == "undefined") {
+//        if (document.addEventListener) {
+//            document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
+//        } else if (document.attachEvent) {
+//            document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
+//            document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
+//        }
+//    } else {
+//        onBridgeReady();
+//    }
     //关闭当前窗口
     function close(){
-        window.close();
+        document.addEventListener('WeixinJSBridgeReady', function(){ WeixinJSBridge.call('closeWindow'); }, false);
+        WeixinJSBridge.call('closeWindow');
     }
 </script>
 </html>
