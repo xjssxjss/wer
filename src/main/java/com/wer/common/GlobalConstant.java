@@ -65,6 +65,8 @@ public class GlobalConstant {
 
     public static final String VISA_QUERY_CLICK = "visa_query_click";
 
+    public static final String JOIN_QR_CODE_CLICK = "join_qr_code_click";
+
     public static final String INTER_URIS_STR = "/wer/messageController/queryMessageByMsgId,";
 
 

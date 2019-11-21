@@ -28,9 +28,6 @@ public abstract class BaseService<T> extends BaseObject {
     private BaseMapper<T> baseMapper;
 
     @Autowired
-    public DictionaryMapper dictionaryMapper;
-
-    @Autowired
     public AttachmentMapper attachmentMapper;
 
     public boolean success = false;

@@ -4,7 +4,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.thoughtworks.xstream.XStream;
-import com.wer.common.BusinessException;
 import com.wer.common.GlobalConstant;
 import com.wer.entity.AccessToken;
 import com.wer.entity.base.BaseMessage;
@@ -21,14 +20,14 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.dom4j.io.SAXReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -41,38 +40,13 @@ import java.util.*;
  */
 @Service
 public class WxService extends BaseService{
+    private static Logger logger = LoggerFactory.getLogger(WxService.class);
 
     private static AccessToken accessToken;
+    private static AccessToken addressBookToken;
 
     @Autowired
     private VisaClaimService visaClaimService;
-
-    /**
-     * 解析微信公众号发来的消息
-     *
-     * @param is
-     * @return
-     */
-    private Map<String, String> parseRequest(InputStream is) {
-        Map<String, String> parseResultMap = new HashMap<>();
-        //声明读取xml的对象
-        SAXReader reader = new SAXReader();
-        try {
-            //1、根据saxReader读取流对象
-            Document document = reader.read(is);
-            //2、获取根节点
-            Element rootElement = document.getRootElement();
-            //3、获取根节点的所有子节点
-            List<Element> listElement = rootElement.elements();
-            //4、循环遍历节点对象
-            for (Element element : listElement) {
-                parseResultMap.put(element.getName(), element.getStringValue());
-            }
-        } catch (DocumentException e) {
-            e.printStackTrace();
-        }
-        return parseResultMap;
-    }
 
     /**
      * 把java对象转化为xml
@@ -144,7 +118,6 @@ public class WxService extends BaseService{
         BaseMessage baseMessage = null;
         //获取事件类型
         String event = requestMap.get("Event");
-        //visa_query_click
 
         switch (event) {
             case "click":
@@ -152,26 +125,24 @@ public class WxService extends BaseService{
                 //获取eventKey
                 if(GlobalConstant.MSG_QUERY_CLICK.equals(eventKey)){
                     //公告查询点击
-                    baseMessage = new TextMessage(requestMap,"请回复“g公告标题”,例如“g领馆”,注意:根据输入的条件,只可查询最近八条公告信息,需要查询更多请输入详细公告标题名称或者到专管员平台进行查看");
+                    baseMessage = new TextMessage(requestMap,"请回复“g公告标题”,例如“g领馆”\n注意：\n根据输入的条件,只可以查询最近八条公告信息\n需要查询更多请输入“g详细公告名称”或者到专管员平台进行查看");
                 } else if(GlobalConstant.VISA_QUERY_CLICK.equals(eventKey)){
                     //护照签证查询点击
                     baseMessage = new TextMessage(requestMap,"请回复“v国家名称”,例如“v美国”");
+                } else if(GlobalConstant.JOIN_QR_CODE_CLICK.equals(eventKey)){
+                    String mediaId = "";
+                    String result = HttpClientUtil.doGet(resourceMap.get("get_join_qr_code").replace("ACCESS_TOKEN", getAddressBookAccessToken()).replace("SIZE_TYPE", "2"));
+
+                    //把返回的结果转化为对象
+                    JSONObject object = (JSONObject) JSON.parse(result);
+
+                    //说明访问成功
+                    if (0 == Integer.valueOf(object.get("errcode").toString())) {
+                        //获取二维码链接
+                        String joinQrcode = (String) object.get("join_qrcode");
+                        baseMessage = new TextMessage(requestMap, "<a href='"+joinQrcode+"'>加入企业微信二维码</a>");
+                    }
                 }
-                /*String mediaId = "";
-                String result = HttpClientUtil.doGet(PropertiesListenerConfig.getProperty("get_join_qr_code").replace("ACCESS_TOKEN", WxService.getAccessToken()).replace("SIZE_TYPE", "2"));
-
-                logger.info("获取加入企业微信二维码结果:{}" + result);
-                //把返回的结果转化为对象
-                JSONObject object = (JSONObject) JSON.parse(result);
-
-                //说明访问成功
-                if (0 == (Integer) object.get("errcode")) {
-                    //获取二维码链接
-                    String joinQrcode = (String) object.get("join_qrcode");
-                    baseMessage = new TextMessage(requestMap, joinQrcode);
-                }*/
-                //Image image = new Image("");
-                // baseMessage = new ImageMessage(requestMap,image);
                 break;
             case "view":
 
@@ -360,6 +331,32 @@ public class WxService extends BaseService{
     }
 
     /**
+     * 根据api地址获取通讯录token
+     */
+    private static void getAddressBookToken() {
+        String result = "";
+        String getAccessTokenUrl = null;
+
+        String corpid = PropertiesListenerConfig.getProperty("corpid");
+        String secret = PropertiesListenerConfig.getProperty("address_book_secret");
+
+        //获取accessToken的url
+        getAccessTokenUrl = PropertiesListenerConfig.getProperty("get_qy_token_url");
+
+        String url = getAccessTokenUrl.replace("ID", corpid).replace("SECRET", secret);
+        //获取token
+        result = HttpClientUtil.doGet(url);
+
+        //对返回的结果转为JSONObject对象
+        JSONObject jsonObject = JSONObject.parseObject(result);
+        System.out.println(jsonObject);
+        String token = (String) jsonObject.get("access_token");
+        String expiresIn = jsonObject.get("expires_in").toString();
+        //基础accessToken对象
+        addressBookToken = new AccessToken(token, expiresIn);
+    }
+
+    /**
      * 向外暴露的方法判断是否已过期
      *
      * @return
@@ -370,6 +367,19 @@ public class WxService extends BaseService{
             getToken();
         }
         return accessToken.getAccessToken();
+    }
+
+    /**
+     * 获取通讯录accessToken
+     *
+     * @return
+     */
+    public static String getAddressBookAccessToken() {
+        if (null == addressBookToken || addressBookToken.isExpired()) {
+            //获取accessToken
+            getAddressBookToken();
+        }
+        return addressBookToken.getAccessToken();
     }
 
     /**
