@@ -228,10 +228,12 @@ public class WxService extends BaseService{
                                                     (String)object.get("stMessageId")).replace("SIGN",sign).
                                                     replace("TIMESTAMP",DateUtil.getCurrentTimeStamp());
                             System.out.println(redirectUrl);
+                            System.out.println(resourceMap.get("image_server_url")+"attachment/images/tzgg.jpg");
                             article = new Article(
                                     dtPublish+(String)object.get("stTitle"),
                                     null,
-                                    "https://ss3.baidu.com/-rVXeDTa2gU2pMbgoY3K/it/u=3483030207,3924941481&fm=202&mola=new&crop=v1",
+                                    resourceMap.get("image_server_url")+"attachments/images/tzgg.jpg",
+                                    //"https://ss3.baidu.com/-rVXeDTa2gU2pMbgoY3K/it/u=3483030207,3924941481&fm=202&mola=new&crop=v1",
                                     redirectUrl);
                             articleList.add(article);
                         }
