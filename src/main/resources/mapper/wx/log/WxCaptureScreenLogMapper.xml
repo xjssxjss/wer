@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wer.dao.wx.log.WxCaptureScreenLogMapper" >
+  <resultMap id="BaseResultMap" type="com.wer.entity.wx.WxCaptureScreenLog" >
+    <id column="CS_ID" property="csId" jdbcType="VARCHAR" />
+    <result column="CS_TITLE" property="csTitle" jdbcType="VARCHAR" />
+    <result column="CS_URL" property="csUrl" jdbcType="VARCHAR" />
+    <result column="CS_ADDR_IP" property="csAddrIp" jdbcType="VARCHAR" />
+    <result column="CS_CAPTURE_TIME" property="csCaptureTime" jdbcType="TIMESTAMP" />
+    <result column="CS_VALID" property="csValid" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    CS_ID, CS_TITLE, CS_URL, CS_ADDR_IP, CS_CAPTURE_TIME, CS_VALID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_wx_capture_screen_log
+    where CS_ID = #{csId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_wx_capture_screen_log
+    where CS_ID = #{csId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.wer.entity.wx.WxCaptureScreenLog" >
+    insert into t_wx_capture_screen_log (CS_ID, CS_TITLE, CS_URL, 
+      CS_ADDR_IP, CS_CAPTURE_TIME, CS_VALID
+      )
+    values (#{csId,jdbcType=VARCHAR}, #{csTitle,jdbcType=VARCHAR}, #{csUrl,jdbcType=VARCHAR}, 
+      #{csAddrIp,jdbcType=VARCHAR}, #{csCaptureTime,jdbcType=TIMESTAMP}, #{csValid,jdbcType=BIT}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.wer.entity.wx.WxCaptureScreenLog" >
+    insert into t_wx_capture_screen_log
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="csId != null" >
+        CS_ID,
+      </if>
+      <if test="csTitle != null" >
+        CS_TITLE,
+      </if>
+      <if test="csUrl != null" >
+        CS_URL,
+      </if>
+      <if test="csAddrIp != null" >
+        CS_ADDR_IP,
+      </if>
+      <if test="csCaptureTime != null" >
+        CS_CAPTURE_TIME,
+      </if>
+      <if test="csValid != null" >
+        CS_VALID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="csId != null" >
+        #{csId,jdbcType=VARCHAR},
+      </if>
+      <if test="csTitle != null" >
+        #{csTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="csUrl != null" >
+        #{csUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="csAddrIp != null" >
+        #{csAddrIp,jdbcType=VARCHAR},
+      </if>
+      <if test="csCaptureTime != null" >
+        #{csCaptureTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="csValid != null" >
+        #{csValid,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.wer.entity.wx.WxCaptureScreenLog" >
+    update t_wx_capture_screen_log
+    <set >
+      <if test="csTitle != null" >
+        CS_TITLE = #{csTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="csUrl != null" >
+        CS_URL = #{csUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="csAddrIp != null" >
+        CS_ADDR_IP = #{csAddrIp,jdbcType=VARCHAR},
+      </if>
+      <if test="csCaptureTime != null" >
+        CS_CAPTURE_TIME = #{csCaptureTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="csValid != null" >
+        CS_VALID = #{csValid,jdbcType=BIT},
+      </if>
+    </set>
+    where CS_ID = #{csId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.wer.entity.wx.WxCaptureScreenLog" >
+    update t_wx_capture_screen_log
+    set CS_TITLE = #{csTitle,jdbcType=VARCHAR},
+      CS_URL = #{csUrl,jdbcType=VARCHAR},
+      CS_ADDR_IP = #{csAddrIp,jdbcType=VARCHAR},
+      CS_CAPTURE_TIME = #{csCaptureTime,jdbcType=TIMESTAMP},
+      CS_VALID = #{csValid,jdbcType=BIT}
+    where CS_ID = #{csId,jdbcType=VARCHAR}
+  </update>
+</mapper>

@@ -12,10 +12,12 @@ import com.wer.entity.msg.TextMessage;
 import com.wer.entity.msg.child.Article;
 import com.wer.entity.sys.Attachment;
 import com.wer.entity.visa.VisaArticle;
+import com.wer.entity.wx.JsapiTicket;
 import com.wer.enums.ResultCode;
 import com.wer.service.base.BaseService;
 import com.wer.service.visa.VisaClaimService;
 import com.wer.util.*;
+import lombok.extern.slf4j.Slf4j;
 import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
@@ -24,10 +26,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -38,9 +43,11 @@ import java.util.*;
  * @author: Sean
  * @version: V1.0
  */
+
 @Service
+@Transactional
+@Slf4j
 public class WxService extends BaseService{
-    private static Logger logger = LoggerFactory.getLogger(WxService.class);
 
     private static AccessToken accessToken;
     private static AccessToken addressBookToken;
@@ -388,7 +395,7 @@ public class WxService extends BaseService{
      * @param code
      * @return
      */
-    public Map<String,Object> authorizeResult(String code){
+    public Map<String,Object> authorizeResult(String code,HttpServletRequest request){
         //获取用户信息url
         String url = resourceMap.get("get_user_info_url");
 
@@ -399,7 +406,6 @@ public class WxService extends BaseService{
             if(!StringUtil.isEmpty(code)){
                 //替换获取用户信息url
                 String getVisitInfoUrl = url.replace("ACCESS_TOKEN",token).replace("CODE",code);
-                System.out.println(getVisitInfoUrl);
 
                 //发起获取用户信息请求
                 String visitInfo = HttpClientUtil.doGet(getVisitInfoUrl);
@@ -410,15 +416,15 @@ public class WxService extends BaseService{
                 if(getWxApiResult(object)){
                     String userId = (String)object.get("UserId");
                     //说明已经认证过了
-                    if(GlobalConstant.userList.contains(userId)){
+                    if(userId.equals(request.getSession().getAttribute("userId"))){
                         success = false;
                         message = GlobalConstant.ALREADTY_AUTHORIZE;
                     } else {
                         success = true;
                         message = GlobalConstant.SUCCESS_MESSAGE;
                         data = userId;
-                        //把userId加入到集合中
-                        GlobalConstant.userList.add(userId);
+                        //把人员信息存到session
+                        request.getSession().setAttribute("userId",userId);
                     }
                 }
             }
@@ -428,4 +434,126 @@ public class WxService extends BaseService{
         }
         return result();
     }
+
+    /**
+     * 根据url获取config-->用于对接js-sdk
+     * @param url
+     * @return
+     */
+    public String getConfigInfo(String url){
+        Map<String,Object> resultMap = new HashMap<>();
+        System.out.println(url);
+
+        //获取ticket信息
+        String result = HttpClientUtil.doGet(resourceMap.get("get_jsapi_ticket_url").replace("ACCESS_TOKEN", getAccessToken()));
+
+        JsapiTicket jsapiTicket = JSON.parseObject(result,JsapiTicket.class);
+
+        //获取js-sdk调用的随机字符串
+        String nonceStr = UUID.randomUUID().toString();
+        log.info("随机字符串："+nonceStr);
+
+        //获取临时票据
+        String ticket = jsapiTicket.getTicket();
+        log.info("临时票据：{}" + ticket);
+
+        //获取当前时间戳
+        String timestamp = Long.toString((new Date().getTime()) / 1000);
+        log.info("当前时间戳：{}"+timestamp);
+
+        log.info("页面地址："+url);
+        String getsig = WxUtil.getJsSdkSign(nonceStr, ticket,timestamp ,url);
+
+        String allowEventKey[] = {"hideOptionMenu","chooseImage"};
+        resultMap.put("beta",true);
+        resultMap.put("debug",true);
+        resultMap.put("appId",resourceMap.get("corpid"));
+        resultMap.put("timestamp",timestamp);
+        resultMap.put("nonceStr",nonceStr);
+        resultMap.put("signature",getsig);
+        resultMap.put("jsApiList",allowEventKey);
+
+        return JSON.toJSONString(resultMap);
+    }
+
+    /**
+     * 获取微信服务号分享的参数
+     * @author MaoLG
+     * @2018-11-23下午2:39:40
+     * @param url 动态获取,  分享的页面实际路径, 不能带# 可以带参数
+     * @return
+     */
+//access_token和jsapi_ticket两个小时有效期,用redis作为缓存
+    /*public Object share(String url) {
+        ShareParam shareParam = null;
+        try {
+            String shareAccessToken = RedisUtils.get("shareAccessToken");// 获取分享使用的token
+            // redis取出的是Empty, 从新获取token
+            if (StringUtil.isEmpty(shareAccessToken)) {
+                //appid:服务号的appid; secret:服务号的AppSecret
+                String getShareAccessTokenUrl = "https://api.weixin.qq.com/cgi-bin/token?"
+                        + "grant_type=client_credential&appid="
+                        + appid
+                        + "&secret=" + secret;
+                String accessTokenJson = HttpClientUtil.doGet(getShareAccessTokenUrl);
+                //这里用的阿里的fastjson
+                AccessToken token = JSON.parseObject(accessTokenJson,
+                        AccessToken.class);
+                shareAccessToken = token.getAccess_token();
+                RedisUtils.set("shareAccessToken", shareAccessToken);
+                // 设置token7150秒过期
+                RedisUtils.expire("shareAccessToken", 7150);
+            }
+
+            // redis 获取jsapiTicket
+            String ticket = RedisUtils.get("jsapiTicket");
+            // ticket is Empty 从新获取
+            if (StringUtils.isEmpty(ticket)) {
+                // 如果不是empty, 直接使用redis中的token获取jsapi
+                String getJsapiUrl = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?"
+                        + "access_token=" + shareAccessToken + "&type=jsapi";
+                String jsapiTicketJson = HttpClientUtils.doGet(getJsapiUrl);
+                JsapiTicket jsapiTicket = JSON.parseObject(jsapiTicketJson,
+                        JsapiTicket.class);
+                // jsapiTicket 获取失败,
+                //DataException自定义的异常类型
+                if (jsapiTicket.getErrcode() != 0) {
+                    throw new DataException("jsapiTicket 获取失败");
+                }
+                // 签名需要的参数ticket
+                ticket = jsapiTicket.getTicket();
+                // 设置过期时间
+                RedisUtils.set("jsapiTicket", ticket);
+                RedisUtils.expire("jsapiTicket", 7140);
+            }
+
+            // 获取随机字符串,这里是UUID 工具就不贴出来了(32位)
+            String nonceStr = StringUtil.idGenerate();
+
+            // 获时间戳
+            String timestamp = System.currentTimeMillis() / 1000 + "";
+
+            // 参数
+            Map<String, String> packageParams = new HashMap<>();
+            packageParams.put("url", url);
+            packageParams.put("noncestr", nonceStr);
+            packageParams.put("jsapi_ticket", ticket);
+            packageParams.put("timestamp", timestamp);
+            // 获得拼接好的参数,按照ASCLL大小排序
+            String createLinkString = WxUtil.createLinkString(packageParams);
+            //SHA1签名,该类继承了weixin4J的WeixinSupport类, 使用的是父类的方法
+            String signature = SHA1.encode(createLinkString);
+            // 参数封装,返回前台
+            shareParam = new ShareParam();
+            shareParam.setAppId(appid);
+            shareParam.setNonceStr(nonceStr);
+            shareParam.setSignature(signature);
+            shareParam.setTimestamp(timestamp);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+        return shareParam;
+    }*/
 }

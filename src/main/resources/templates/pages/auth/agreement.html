@@ -63,7 +63,6 @@
                 flag = $('#readAndAgree').is(':checked');
                 //如果选中
                 if(flag){
-                    //设置href路径为https://open.weixin.qq.com/connect/oauth2/authorize?appid=ww276e0367e9eace3e&redirect_uri=http://spro.free.idcfengye.com/wer/indexController/authorizeResponse&response_type=code&scope=snsapi_userinfo&state=swb2019#wechat_redirect
                     $('#confirm').removeClass('weui-btn_disabled');
                     $('#confirm').attr('href','https://open.weixin.qq.com/connect/oauth2/authorize?appid=ww276e0367e9eace3e&redirect_uri=http://spro.free.idcfengye.com/wer/indexController/authorizeResponse&response_type=code&scope=snsapi_userinfo&state=swb2019#wechat_redirect');
                 } else {

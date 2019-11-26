@@ -8,11 +8,20 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
+import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 @EnableScheduling
 @SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
@@ -41,5 +50,28 @@ public class WerApplication extends SpringBootServletInitializer implements WebM
 	@Override
 	protected final SpringApplicationBuilder configure(final SpringApplicationBuilder application) {
 		return application.sources(WerApplication.class);
+	}
+
+	/**
+	 * springboot 解决跨域访问问题
+	 * @return
+	 */
+	@Bean
+	public FilterRegistrationBean corsFilter(){
+		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+		CorsConfiguration config = new CorsConfiguration();
+		config.setAllowCredentials(true);
+		ArrayList<String> objects = new ArrayList<>();
+		objects.add("*");
+		config.setAllowedOrigins(objects);
+		config.setAllowedHeaders(objects);
+		config.setAllowedMethods(objects);
+//        source.registerCorsConfiguration("/**", config);
+		Map<String, CorsConfiguration> corsConfigurations = new HashMap<>();
+		corsConfigurations.put("/**",config);
+		source.setCorsConfigurations(corsConfigurations);
+		FilterRegistrationBean bean = new FilterRegistrationBean(new CorsFilter(source));
+		bean.setOrder(0);
+		return bean;
 	}
 }

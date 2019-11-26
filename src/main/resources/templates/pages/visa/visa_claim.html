@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:include="/common/header::header('签证要求')"></head>
+<head th:include="/common/header::header('签证要求')">
+</head>
 <style>
     .title_color{
         color: gray;
@@ -183,30 +184,63 @@
 <div th:replace="/common/footer::footer"></div>
 </body>
 
-<script src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
 <script>
-    $(function () {
+    $(document).ready(function(){
         FastClick.attach(document.body);
-        alert(wx);
+        var siteUrl = encodeURIComponent(window.location.href.split('#')[0]); //(地址是获取当前页面的地址)比较重要
+        $.ajax({
+            url : "http://spro.free.idcfengye.com/wer/indexController/getConfigInfo?url="+siteUrl,
+            type : "get",
+            dataType : "JSON",
+            async:true,
+            success : function(data) {
+                let wxConfig = {
+                    debug : false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    beta : true,
+                    appId : data.appId, // 必填，企业微信的corpID
+                    timestamp : data.timestamp, // 必填，生成签名的时间戳
+                    nonceStr : data.nonceStr, // 必填，生成签名的随机串
+                    signature : data.signature,// 必填，签名，见附录1
+                    jsApiList: [
+                        "onMenuShareTimeline",
+                        "onMenuShareQQ",
+                        "hideOptionMenu",
+                        "onUserCaptureScreen"
+                    ]
+                };
+                //配置js-sdk
+                wx.config(wxConfig);
+
+                wx.ready(function() {
+                   /* wx.checkJsApi({
+                     jsApiList : ['hideOptionMenu'], // 需要检测的JS接口列表，所有JS接口列表见附录2,
+                     success : function(succ) {
+                        alert('检查jsApiList成功'+JSON.stringify(succ));
+                     // 以键值对的形式返回，可用的api值true，不可用为false
+                     // 如：{"checkResult":{"chooseImage":true},"errMsg":"checkJsApi:ok"}
+                     },
+                     error:function (err) {
+                        alert('alert'+JSON.stringify(err));
+                     }
+                     });*/
+                    //隐藏分享接口
+                    wx.hideOptionMenu();
+
+                    //监听用户截屏事件
+                     wx.onUserCaptureScreen(function(res) {
+                         $.ajax({
+                             url:'http://spro.free.idcfengye.com/wer/indexController/onUserCaptureScreen?title='+document.title+'&url='+siteUrl,
+                             type:'get',
+                             dataType:'json'
+                         });
+                    })
+                });
+
+                wx.error(function (res) {
+                    alert('调用微信js-sdk失败');
+                });
+            }
+        })
     });
-
-    wx.onUserCaptureScreen(function(res) {
-        alert('用户截屏了'+res);
-    })
-
-//    function onBridgeReady() {
-//        WeixinJSBridge.call('hideOptionMenu');
-//    }
-//
-//    if (typeof WeixinJSBridge == "undefined") {
-//        if (document.addEventListener) {
-//            document.addEventListener('WeixinJSBridgeReady', onBridgeReady, false);
-//        } else if (document.attachEvent) {
-//            document.attachEvent('WeixinJSBridgeReady', onBridgeReady);
-//            document.attachEvent('onWeixinJSBridgeReady', onBridgeReady);
-//        }
-//    } else {
-//        onBridgeReady();
-//    }
 </script>
 </html>

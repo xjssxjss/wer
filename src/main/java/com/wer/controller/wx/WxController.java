@@ -4,6 +4,7 @@ import com.wer.common.BusinessException;
 import com.wer.common.GlobalConstant;
 import com.wer.controller.base.BaseController;
 import com.wer.enums.ResultCode;
+import com.wer.service.sys.LogService;
 import com.wer.service.wx.WxService;
 import com.wer.service.sys.DictionaryEntriesService;
 import com.wer.util.HttpClientUtil;
@@ -25,6 +26,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -42,6 +45,9 @@ public class WxController extends BaseController{
 
     @Autowired
     private WxService wxService;
+
+    @Autowired
+    private LogService logService;
 
     @Autowired
     private DictionaryEntriesService dictionaryEntriesService;
@@ -147,8 +153,10 @@ public class WxController extends BaseController{
      */
     @GetMapping(value = "authorizeResponse")
     public String authorizeResult(@RequestParam(value = "code") String code,
-                                  Model model){
-        Map<String,Object> resultMap = wxService.authorizeResult(code);
+                                  Model model,
+                                  HttpServletRequest request){
+        Map<String,Object> resultMap = wxService.authorizeResult(code,request);
+        System.out.println("session"+request.getSession().getAttribute("userId"));
         //成功
         if((Boolean)resultMap.get("success")){
             return GlobalConstant.AGREEMENT_SUCCESS;
@@ -157,5 +165,30 @@ public class WxController extends BaseController{
             model.addAttribute("message",resultMap.get("message"));
             return GlobalConstant.AGREEMENT_ERROR;
         }
+    }
+
+    /**
+     * jd-sdk 获取config信息
+     * @param url
+     * @return
+     */
+    @GetMapping(value = "getConfigInfo")
+    @ResponseBody
+    public String getConfigInfo(@RequestParam(value = "url") String url) {
+        return wxService.getConfigInfo(url);
+    }
+
+    /**
+     * 记录用户截屏相关事件
+     * @param title
+     * @param url
+     * @param request
+     */
+    @GetMapping(value = "onUserCaptureScreen")
+    @ResponseBody
+    public void onUserCaptureScreen(@RequestParam(value = "title") String title,
+                                    @RequestParam(value = "url") String url,
+                                    HttpServletRequest request){
+        logService.onUserCaptureScreen(title,url,request);
     }
 }

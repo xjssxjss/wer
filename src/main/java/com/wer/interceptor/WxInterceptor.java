@@ -80,11 +80,11 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
 //        }
 
 
-        System.out.println(request.getContextPath());
-        /*if(!GlobalConstant.AUTH_ALREADY.contains("xieyahui")){
-            response.sendRedirect( "http://192.168.0.115:9999/wer/auth/authorize");
-            return false;
-        }*/
+        System.out.println("获取上下文："+request.getContextPath());
+//        if(1==1){
+//            response.sendRedirect( "http://192.168.0.115:9999/wer/auth/authorize");
+//            return false;
+//        }
 
         return true;// 只有返回true才会继续向下执行，返回false取消当前请求
     }
