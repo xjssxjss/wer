@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="layout :: common_head(~{::title})">
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-  <!--<link rel="stylesheet" th:href="@{/common/lib/weui.min.css}" />-->
-  <!--<link rel="stylesheet" th:href="@{/common/lib/weui.min.css}" />
-  <link rel="stylesheet" th:href="@{/common/css/jquery-weui.css}" />-->
+<head  th:include="/common/header::header('grid')">
 </head>
 
   <body ontouchstart class="page">
@@ -170,7 +165,6 @@
         </div>
       </div>
     </div>
-
 
     <div class="weui-cells__title">开关</div>
     <div class="weui-cells weui-cells_form">

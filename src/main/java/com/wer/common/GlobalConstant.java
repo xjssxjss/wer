@@ -510,7 +510,6 @@ public class GlobalConstant {
 
     public static final String INTER_URIS_STR = "/wer/messageController/queryMessageByMsgId,";
 
-
     /**
      * 跳转界面
      */
@@ -518,6 +517,10 @@ public class GlobalConstant {
     public static final String VISA_CLAIM = "visa/visa_claim";
     //
     public static final String GRID = "apec/grid";
+    //APEC卡办理
+    public static final String APEC_SELECT = "apec/apec_select";
+    //APEC卡在线申办
+    public static final String APEC_ON_LINE = "apec/apec_on_line";
     //公告详情界面
     public static final String MSG_DETAIL = "msg/msg_detail";
     //认证界面
@@ -530,8 +533,19 @@ public class GlobalConstant {
     //认证失败页面
     public static final String AGREEMENT_ERROR = "auth/error";
 
-    //已认证用户
-    public static final String AUTH_ALREADY = "";
-
     public static Set<String> userList = new HashSet<>();
+
+    //***********************************redis keys begin*******************************//
+    //key失效时间
+    public static final int REDIS_KEY_EXPIRE_SECONDS = 60*90;
+
+    //企业微信全局access_token
+    public static final String REDIS_KEY_ACCESS_TOKEN = "access_token";
+
+    //企业微信用户通讯录的access_token
+    public static final String REDIS_KEY_ADDRESS_BOOK_ACCESS_TOKEN = "address_book_access_token";
+
+    //JS_API_TICKET
+    public static final String REDIS_KEY_JS_API_TICKET = "js_api_ticket";
+    //************************************redis keys end******************************//
 }

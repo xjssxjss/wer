@@ -22,8 +22,6 @@ import org.dom4j.Document;
 import org.dom4j.DocumentException;
 import org.dom4j.DocumentHelper;
 import org.dom4j.Element;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,8 +29,6 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -47,10 +43,7 @@ import java.util.*;
 @Service
 @Transactional
 @Slf4j
-public class WxService extends BaseService{
-
-    private static AccessToken accessToken;
-    private static AccessToken addressBookToken;
+public class WxService extends BaseService {
 
     @Autowired
     private VisaClaimService visaClaimService;
@@ -176,7 +169,7 @@ public class WxService extends BaseService{
         String[] visaCountrys = resourceMap.get("visa_countrys").split(",");
         String redirectUrl = null;
         if(!GlobalConstant.userList.contains(requestMap.get("FromUserName"))){
-            baseMessage = new TextMessage(requestMap,"您好，请先进行<a href='http://192.168.0.115:9999/wer/indexController/agreement'>认证</a>");
+            baseMessage = new TextMessage(requestMap,"您好，请先进行<a href='http://192.168.0.109:9999/wer/indexController/agreement'>认证</a>");
         } else {
             //说明查询的是国家护照签证信息
             if(!StringUtil.isEmpty(content) && content.startsWith("v")){
@@ -317,6 +310,8 @@ public class WxService extends BaseService{
      * 根据api地址获取token
      */
     private static void getToken() {
+        JedisUtil.Strings strings = jedisUtil.new Strings();
+
         String result = "";
         String getAccessTokenUrl = null;
 
@@ -333,17 +328,22 @@ public class WxService extends BaseService{
         //对返回的结果转为JSONObject对象
         JSONObject jsonObject = JSONObject.parseObject(result);
         System.out.println(jsonObject);
+
         String token = (String) jsonObject.get("access_token");
         String expiresIn = jsonObject.get("expires_in").toString();
-        //基础accessToken对象
-        accessToken = new AccessToken(token, expiresIn);
+
+        if(!StringUtil.isEmpty(token)){
+            //一个半小时失效
+            strings.setEx(GlobalConstant.REDIS_KEY_ACCESS_TOKEN,GlobalConstant.REDIS_KEY_EXPIRE_SECONDS,token);
+        }
     }
 
     /**
      * 根据api地址获取通讯录token
      */
     private static void getAddressBookToken() {
-        String result = "";
+        JedisUtil.Strings strings = jedisUtil.new Strings();
+
         String getAccessTokenUrl = null;
 
         String corpid = PropertiesListenerConfig.getProperty("corpid");
@@ -353,16 +353,16 @@ public class WxService extends BaseService{
         getAccessTokenUrl = PropertiesListenerConfig.getProperty("get_qy_token_url");
 
         String url = getAccessTokenUrl.replace("ID", corpid).replace("SECRET", secret);
-        //获取token
-        result = HttpClientUtil.doGet(url);
 
         //对返回的结果转为JSONObject对象
-        JSONObject jsonObject = JSONObject.parseObject(result);
-        System.out.println(jsonObject);
+        JSONObject jsonObject = JSONObject.parseObject(HttpClientUtil.doGet(url));
+
         String token = (String) jsonObject.get("access_token");
-        String expiresIn = jsonObject.get("expires_in").toString();
-        //基础accessToken对象
-        addressBookToken = new AccessToken(token, expiresIn);
+
+        if(!StringUtil.isEmpty(token)){
+            //一个半小时失效
+            strings.setEx(GlobalConstant.REDIS_KEY_ADDRESS_BOOK_ACCESS_TOKEN,GlobalConstant.REDIS_KEY_EXPIRE_SECONDS,token);
+        }
     }
 
     /**
@@ -371,11 +371,18 @@ public class WxService extends BaseService{
      * @return
      */
     public static String getAccessToken() {
-        if (null == accessToken || accessToken.isExpired()) {
+        log.info("jedisUtil:"+jedisUtil);
+        //实例化Strings操作对象
+        JedisUtil.Strings strings = jedisUtil.new Strings();
+
+        String accessToken = strings.get(GlobalConstant.REDIS_KEY_ACCESS_TOKEN);
+        //判断如果redis中没有数据，则重新进行获取
+        if (StringUtil.isEmpty(accessToken)) {
             //获取accessToken
             getToken();
         }
-        return accessToken.getAccessToken();
+        //返回redis key对象的value
+        return null==accessToken ? strings.get(GlobalConstant.REDIS_KEY_ACCESS_TOKEN):accessToken;
     }
 
     /**
@@ -383,11 +390,19 @@ public class WxService extends BaseService{
      * @return
      */
     public static String getAddressBookAccessToken() {
-        if (null == addressBookToken || addressBookToken.isExpired()) {
-            //获取accessToken
+        log.info("jedisUtil:"+jedisUtil);
+        //实例化Strings操作对象
+        JedisUtil.Strings strings = jedisUtil.new Strings();
+
+        //获取AddressAccessToken
+        String addressAccessToken = strings.get(GlobalConstant.REDIS_KEY_ADDRESS_BOOK_ACCESS_TOKEN);
+        //判断如果redis中没有数据，则重新进行获取
+        if (StringUtil.isEmpty(addressAccessToken)) {
+            //获取address accessToken
             getAddressBookToken();
         }
-        return addressBookToken.getAccessToken();
+
+        return null == addressAccessToken ?strings.get(GlobalConstant.REDIS_KEY_ADDRESS_BOOK_ACCESS_TOKEN):addressAccessToken;
     }
 
     /**
@@ -444,10 +459,24 @@ public class WxService extends BaseService{
         Map<String,Object> resultMap = new HashMap<>();
         System.out.println(url);
 
-        //获取ticket信息
-        String result = HttpClientUtil.doGet(resourceMap.get("get_jsapi_ticket_url").replace("ACCESS_TOKEN", getAccessToken()));
+        JedisUtil.Strings strings = jedisUtil.new Strings();
 
-        JsapiTicket jsapiTicket = JSON.parseObject(result,JsapiTicket.class);
+        //获取jedis缓存中jsApiTicket
+        String jsApiTicket = strings.get(GlobalConstant.REDIS_KEY_JS_API_TICKET);
+
+        //判断如果缓存中没有信息
+        JsapiTicket jsapiTicket = null;
+
+        if(StringUtil.isEmpty(jsApiTicket)){
+            //获取ticket信息
+            String result = HttpClientUtil.doGet(resourceMap.get("get_jsapi_ticket_url").replace("ACCESS_TOKEN", getAccessToken()));
+
+            //转换jsApiTicket对象
+            jsapiTicket = JSON.parseObject(result,JsapiTicket.class);
+
+            //把jsApiTicket票据放入缓存
+            strings.setEx(GlobalConstant.REDIS_KEY_JS_API_TICKET,GlobalConstant.REDIS_KEY_EXPIRE_SECONDS,jsapiTicket.getTicket());
+        }
 
         //获取js-sdk调用的随机字符串
         String nonceStr = UUID.randomUUID().toString();
@@ -465,8 +494,7 @@ public class WxService extends BaseService{
         String getsig = WxUtil.getJsSdkSign(nonceStr, ticket,timestamp ,url);
 
         String allowEventKey[] = {"hideOptionMenu","chooseImage"};
-        resultMap.put("beta",true);
-        resultMap.put("debug",true);
+        resultMap.put("debug",false);
         resultMap.put("appId",resourceMap.get("corpid"));
         resultMap.put("timestamp",timestamp);
         resultMap.put("nonceStr",nonceStr);
@@ -475,85 +503,4 @@ public class WxService extends BaseService{
 
         return JSON.toJSONString(resultMap);
     }
-
-    /**
-     * 获取微信服务号分享的参数
-     * @author MaoLG
-     * @2018-11-23下午2:39:40
-     * @param url 动态获取,  分享的页面实际路径, 不能带# 可以带参数
-     * @return
-     */
-//access_token和jsapi_ticket两个小时有效期,用redis作为缓存
-    /*public Object share(String url) {
-        ShareParam shareParam = null;
-        try {
-            String shareAccessToken = RedisUtils.get("shareAccessToken");// 获取分享使用的token
-            // redis取出的是Empty, 从新获取token
-            if (StringUtil.isEmpty(shareAccessToken)) {
-                //appid:服务号的appid; secret:服务号的AppSecret
-                String getShareAccessTokenUrl = "https://api.weixin.qq.com/cgi-bin/token?"
-                        + "grant_type=client_credential&appid="
-                        + appid
-                        + "&secret=" + secret;
-                String accessTokenJson = HttpClientUtil.doGet(getShareAccessTokenUrl);
-                //这里用的阿里的fastjson
-                AccessToken token = JSON.parseObject(accessTokenJson,
-                        AccessToken.class);
-                shareAccessToken = token.getAccess_token();
-                RedisUtils.set("shareAccessToken", shareAccessToken);
-                // 设置token7150秒过期
-                RedisUtils.expire("shareAccessToken", 7150);
-            }
-
-            // redis 获取jsapiTicket
-            String ticket = RedisUtils.get("jsapiTicket");
-            // ticket is Empty 从新获取
-            if (StringUtils.isEmpty(ticket)) {
-                // 如果不是empty, 直接使用redis中的token获取jsapi
-                String getJsapiUrl = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?"
-                        + "access_token=" + shareAccessToken + "&type=jsapi";
-                String jsapiTicketJson = HttpClientUtils.doGet(getJsapiUrl);
-                JsapiTicket jsapiTicket = JSON.parseObject(jsapiTicketJson,
-                        JsapiTicket.class);
-                // jsapiTicket 获取失败,
-                //DataException自定义的异常类型
-                if (jsapiTicket.getErrcode() != 0) {
-                    throw new DataException("jsapiTicket 获取失败");
-                }
-                // 签名需要的参数ticket
-                ticket = jsapiTicket.getTicket();
-                // 设置过期时间
-                RedisUtils.set("jsapiTicket", ticket);
-                RedisUtils.expire("jsapiTicket", 7140);
-            }
-
-            // 获取随机字符串,这里是UUID 工具就不贴出来了(32位)
-            String nonceStr = StringUtil.idGenerate();
-
-            // 获时间戳
-            String timestamp = System.currentTimeMillis() / 1000 + "";
-
-            // 参数
-            Map<String, String> packageParams = new HashMap<>();
-            packageParams.put("url", url);
-            packageParams.put("noncestr", nonceStr);
-            packageParams.put("jsapi_ticket", ticket);
-            packageParams.put("timestamp", timestamp);
-            // 获得拼接好的参数,按照ASCLL大小排序
-            String createLinkString = WxUtil.createLinkString(packageParams);
-            //SHA1签名,该类继承了weixin4J的WeixinSupport类, 使用的是父类的方法
-            String signature = SHA1.encode(createLinkString);
-            // 参数封装,返回前台
-            shareParam = new ShareParam();
-            shareParam.setAppId(appid);
-            shareParam.setNonceStr(nonceStr);
-            shareParam.setSignature(signature);
-            shareParam.setTimestamp(timestamp);
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return null;
-        }
-        return shareParam;
-    }*/
 }

@@ -55,7 +55,8 @@ public class WxController extends BaseController{
     @RequestMapping(value = "index")
     public String index(){
         dictionaryEntriesService.queryDictionaryEntriesByCode();
-        return GlobalConstant.GRID;
+        //return GlobalConstant.APEC_ON_LINE;
+        return "tabbar/tabbar";
     }
 
     /**
@@ -76,7 +77,9 @@ public class WxController extends BaseController{
         if(null == map.get(countryName)){
             throw new BusinessException(ResultCode.getResult(408));
         }
-        return GlobalConstant.VISA_CLAIM;
+
+        return "tabbar/tabbar";
+//        return GlobalConstant.VISA_CLAIM;
     }
 
     @RequestMapping(value = "signIn")

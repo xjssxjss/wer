@@ -8,6 +8,7 @@ import com.wer.common.GlobalConstant;
 import com.wer.dao.AttachmentMapper;
 import com.wer.dao.BaseMapper;
 import com.wer.dao.DictionaryMapper;
+import com.wer.util.JedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;

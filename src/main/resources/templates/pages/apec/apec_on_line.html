@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="/common/header::header('APEC卡办理')"></head>
+<style>
+    .placeholder {
+        margin: 5px 5px -15px 5px;
+        padding: 0 0 0 10px;
+        height: 2.3em;
+        line-height: 2.3em;
+        text-align: center;
+        color: #cfcfcf;
+    }
+</style>
+<body ontouchstart class="page">
+    <div class="weui-flex">
+        <div class="weui-flex__item">
+            <div class="placeholder">- APEC商务旅行卡申办 -</div>
+        </div>
+    </div>
+    <div class="weui-cells weui-cells_form">
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">姓:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="请输入姓">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">名:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" placeholder="请输入名" type="text">
+            </div>
+            <i class="weui-icon-clear" onclick="cleartxt(this)"></i>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">汉语拼音:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="请输入汉语拼音">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">曾用名:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="请输入曾用名">
+            </div>
+        </div>
+
+        <div class="weui-cell weui-cell_warn">
+            <div class="weui-cell__hd"><label for="shen" class="weui-label">身份证号：</label></div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" id="shen" type="number" pattern="^[1-9]\d{5}(18|19|([23]\d))\d{2}((0[1-9])|(10|11|12))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$" value="input error" placeholder="请输入18位身份证号">
+            </div>
+            <div class="weui-cell__ft">
+                <i class="weui-icon-warn"></i>
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd"><label for="birthday" class="weui-label">出生日期:</label></div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" id="birthday" type="date" placeholder="请选择出生日期" value="">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label for="country" class="weui-label">国籍:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" id="country" type="text" value="" placeholder="请输入国籍">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">出生于国外</label>
+            </div>
+
+            <div class="weui-form">
+                <div class="weui-form-li iblock">
+                    <input class="weui-form-checkbox" name="cs1"  id="cs1" value="否" type="radio" checked>
+                    <label for="cs1">
+                        <i class="weui-icon-radio"></i>
+                        <div class="weui-form-text"><p>否</p></div>
+                    </label>
+                </div>
+
+                <div class="weui-form-li iblock">
+                    <input class="weui-form-checkbox" name="cs1"  id="cs2" value="是" type="radio">
+                    <label for="cs2">
+                        <i class="weui-icon-radio"></i>
+                        <div class="weui-form-text"><p>是</p></div>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">出生省份:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="请输入省份">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">出生城市/县:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="请输入省份">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">电话:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="tel" placeholder="请输入电话">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">职务:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="请输入职务">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">访问目的:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="请输入访问目的">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">邮寄地址:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="请输入邮寄地址">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">单位名称:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="请输入单位名称">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">单位地址:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="请输入单位地址">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">联系人:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="请输入联系人">
+            </div>
+        </div>
+
+        <div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">单位性质</label>
+            </div>
+        </div>
+        <div class="weui-form">
+            <div class="weui-form-li iblock">
+                <input class="weui-form-checkbox"  name="f2"  id="xz1" value="否" type="radio" checked>
+                <label for="xz1">
+                    <i class="weui-icon-radio"></i>
+                    <div class="weui-form-text"><p>民营企业</p></div>
+                </label>
+            </div>
+
+            <div class="weui-form-li iblock">
+                <input class="weui-form-checkbox"  name="f2"  id="xz2" value="是" type="radio">
+                <label for="xz2">
+                    <i class="weui-icon-radio"></i>
+                    <div class="weui-form-text"><p>中外合资</p></div>
+                </label>
+            </div>
+
+            <div class="weui-form-li iblock">
+                <input class="weui-form-checkbox"  name="f2"  id="xz3" value="是" type="radio">
+                <label for="xz3">
+                    <i class="weui-icon-radio"></i>
+                    <div class="weui-form-text"><p>外资企业</p></div>
+                </label>
+            </div>
+
+            <div class="weui-form-li iblock">
+                <input class="weui-form-checkbox"  name="f2"  id="xz4" value="是" type="radio">
+                <label for="xz4">
+                    <i class="weui-icon-radio"></i>
+                    <div class="weui-form-text"><p>港澳台企业</p></div>
+                </label>
+            </div>
+        </div>
+
+        <div class="weui-uploader">
+            <div class="weui-uploader__hd">
+                <p class="weui-uploader__title">附件上传:</p>
+                <div class="weui-uploader__info">0/2</div>
+            </div>
+            <div class="weui-uploader__bd">
+                <ul class="weui-uploader__files">
+                </ul>
+                <div class="weui-uploader__input-box">
+                    <input class="weui-uploader__input" accept="image/*" multiple="" type="file"  onchange="previewImage(this)">
+                </div>
+            </div>
+        </div>
+
+
+        <!--<div class="weui-cell">
+            <div class="weui-cell__hd">
+                <label class="weui-label">附件上传:</label>
+            </div>
+            <div class="weui-cell__bd">
+                <input class="weui-input" type="text" placeholder="请输入">
+            </div>
+        </div>-->
+
+        <a href="javascript:;" class="weui-btn weui-btn_primary">马上提交</a>
+    </div>
+</body>
+<!-- js事件 -->
+<script type="text/javascript">
+    $(function () {
+        FastClick.attach(document.body);
+
+        //选择国籍
+        $("#country").select({
+            title: "选择国籍",
+            items: [
+                {
+                    title: "中国",
+                    value: "001",
+                },
+                {
+                    title: "国外",
+                    value: "002",
+                }
+            ]
+        });
+    });
+
+    //预览上传图片效果
+    function previewImage(file) {
+        var MAXWIDTH = 1000;
+        var MAXHEIGHT = 1200;
+        if (file.files && file.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (evt) {
+                alert('上传文件');
+                $.post("../php/upload.php",{imgbase64: evt.target.result},function(rs){
+                    $(file).parent().prev().html('<li  onclick="removeimg(this)" class="weui-uploader__file" style="background-image:url('+evt.target.result+')"><input value="'+rs.src+'"  type="hidden"  name="files" /></li>');
+                },'json');
+            };
+            reader.readAsDataURL(file.files[0]);
+            console.log(file.files[0]);
+        }
+    }
+
+    //清空文本框内容
+    function cleartxt(obj){
+        $(obj).prev().find('.weui-input').val("");
+        return false;
+    }
+</script>
+</html>

@@ -1,34 +1,26 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<script type="text/javascript">
-    document.addEventListener('WeixinJSBridgeReady', function onBridgeReady() {
-        // 通过下面这个API隐藏右上角按钮
-        WeixinJSBridge.call('hideOptionMenu');
-    });
-
-    $(function () {
-        var siteUrl = window.location.href; //(地址是获取当前页面的地址)比较重要
-        alert('地址'+siteUrl);
-//        alert('获取信息'+siteUrl);
-//        $.getJSON('http://192.168.0.115:9999/wer/indexController/getConfigInfo?url='+siteUrl,function (res) {
-//            //res包括config所需要的所有信息并且是jsonh数据格式
-//            wx.config(res);
-//        });
-    });
-</script>
 <head th:fragment="header(title)">
     <title th:text="${title}"></title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
 
-    <link rel="stylesheet" th:href="@{/common/css/weui.min.css}"/>
-    <link rel="stylesheet" th:href="@{/common/css/jquery-weui.css}"/>
-
+    <link rel="stylesheet" th:href="@{/common/css/weui.css}"/>
+    <link rel="stylesheet" th:href="@{/common/css/weuix.css}"/>
+    <!--<link rel="stylesheet" th:href="@{/common/css/jquery-weui.css}"/>-->
 
     <script th:src="@{/common/js/jweixin-1.2.0.js}"></script>
     <script th:src="@{/common/js/jquery-2.1.4.js}"></script>
     <script th:src="@{/common/js/fastclick.js}"></script>
     <script th:src="@{/common/js/swiper.js}"></script>
+
     <script th:src="@{/common/js/zepto.js}"></script>
+    <script th:src="@{/common/js/zepto.weui.js}"></script>
+
+    <script th:src="@{/common/js/iscroll-lite.js}"></script>
 </head>
+<script type="text/javascript">
+    $(function () {
+    });
+</script>
 </html>
