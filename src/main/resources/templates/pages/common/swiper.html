@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" th:href="@{/common/css/weui.css}"/>
+    <link rel="stylesheet" th:href="@{/common/css/weuix.css}"/>
+    <!-- 引入swiper.js zepto.min.js-->
+    <!--<script th:src="@{/common/js/jquery-2.1.4.js}"></script>-->
+    <!--<script th:src="@{/common/js/jquery.min.js}"></script>-->
+    <script th:src="@{/common/js/zepto.min.js}"></script>
+    <script th:src="@{/common/js/swiper.js}"></script>
+</head>
+<body ontouchstart class="page">
+    <div class="slide slide-m" id="slide3">
+        <ul>
+            <li>
+                <div  class='txt'>空旷冷落的古旧行宫，只有宫花寂寞地艳红</div></li>
+            <li>
+                <div  class='txt'>几个满头白发的宫女，闲坐无事谈论唐玄宗</div>
+            </li>
+            <li>
+                <div  class='txt'>但见泪痕湿，不知心恨谁</div>
+            </li>
+        </ul>
+    </div>
+</body>
+<!-- js事件 -->
+<script type="text/javascript">
+    $(function () {
+        $('#slide3').swipeSlide({
+            autoSwipe:true,//自动切换默认是
+            speed:3000,//速度默认4000
+            continuousScroll:true,//默认否
+            transitionType:'ease-in'
+        });
+    });
+</script>
+</html>

@@ -168,7 +168,7 @@ public class WxService extends BaseService {
         BaseMessage baseMessage = null;
         String[] visaCountrys = resourceMap.get("visa_countrys").split(",");
         String redirectUrl = null;
-        if(!GlobalConstant.userList.contains(requestMap.get("FromUserName"))){
+        if(GlobalConstant.userList.contains(requestMap.get("FromUserName"))){
             baseMessage = new TextMessage(requestMap,"您好，请先进行<a href='http://192.168.0.109:9999/wer/indexController/agreement'>认证</a>");
         } else {
             //说明查询的是国家护照签证信息

@@ -59,6 +59,23 @@ public class WxController extends BaseController{
         return "tabbar/tabbar";
     }
 
+    @RequestMapping(value = "apecSelect")
+    public String apecSelect(){
+        //return GlobalConstant.APEC_ON_LINE;
+        return "apec/apec_select";
+    }
+
+    @RequestMapping(value = "apecOnLine")
+    public String apecOnLine(){
+        //return GlobalConstant.APEC_ON_LINE;
+        return "apec/apec_on_line";
+    }
+
+    @RequestMapping(value = "swiper")
+    public String swiper(){
+        return "common/swiper";
+    }
+
     /**
      * 获取护照签证信息
      * @param model

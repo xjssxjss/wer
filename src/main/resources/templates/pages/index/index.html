@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
+    <link rel="stylesheet" th:href="@{/common/css/weui.css}"/>
+    <link rel="stylesheet" th:href="@{/common/css/weuix.css}"/>
+    <!-- 引入swiper.js zepto.min.js-->
+    <!--<script th:src="@{/common/js/jquery-2.1.4.js}"></script>-->
+    <!--<script th:src="@{/common/js/jquery.min.js}"></script>-->
+    <script th:src="@{/common/js/zepto.min.js}"></script>
+    <script th:src="@{/common/js/swiper.js}"></script>
+</head>
+<style type="text/css">
+    .placeholder {
+        margin: 5px 5px -15px 5px;
+        padding: 0 0 0 10px;
+        height: 2.3em;
+        line-height: 2.3em;
+        text-align: center;
+        color: #cfcfcf;
+    }
+
+    .weui-mark-img .img-max{
+        margin: 0 auto;
+        display: table-cell;
+        width: 96%;
+        vertical-align: middle;
+    }
+</style>
+<body ontouchstart>
+    <div class="weui-grids">
+        <a href="http://192.168.0.109:9999/wer/indexController/apecSelect" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img th:src="@{/common/images/icon_nav_button.png}" alt="">
+            </div>
+            <p class="weui-grid__label">
+                APEC卡业务
+            </p>
+        </a>
+        <a href="" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img th:src="@{/common/images/icon_nav_toast.png}" alt="">
+            </div>
+            <p class="weui-grid__label">
+                公务护照业务
+            </p>
+        </a>
+        <a href="" class="weui-grid js_grid">
+            <div class="weui-grid__icon">
+                <img th:src="@{/common/images/icon_nav_dialog.png}" alt="">
+            </div>
+            <p class="weui-grid__label">
+                签证业务
+            </p>
+        </a>
+    </div>
+
+    <!-- 通知公告 -->
+    <div class="weui-flex">
+        <div class="weui-flex__item">
+            <div class="placeholder">- 通知公告 -</div>
+        </div>
+    </div>
+    <!-- 通知公告 -->
+
+   <!-- <div class="weui-flex">
+        <div th:replace="/common/swiper"></div>
+    </div>
+-->
+    <div class="weui-flex">
+        <div class="weui-flex__item">
+            <div class="placeholder">
+                <div class="slide slide-m" id="slide3">
+                    <ul>
+                        <li>
+                            <div  class='txt'>空旷冷落的古旧行宫，只有宫花寂寞地艳红</div></li>
+                        <li>
+                            <div  class='txt'>几个满头白发的宫女，闲坐无事谈论唐玄宗</div>
+                        </li>
+                        <li>
+                            <div  class='txt'>但见泪痕湿，不知心恨谁</div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <div class="weui-cells">
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__bd">
+                <p>最新签证要求</p>
+            </div>
+            <div class="weui-cell__ft">
+            </div>
+        </a>
+    </div>
+
+    <div class="weui-content">
+        <div class="weui-c-inner">
+            <div class="weui-c-content">
+                <div class="weui-c-article">
+                    <p><img src="http://192.168.0.103/attachments/images/usa.jpg"></p>
+                </div>
+                <div class="weui-c-article">
+                    <p><img src="http://192.168.0.103/attachments/images/jianada.jpg"></p>
+                </div>
+                <div class="weui-c-article">
+                    <p><img src="http://192.168.0.103/attachments/images/deguo.jpg"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    </br>
+</body>
+<!-- js事件 -->
+<script type="text/javascript">
+
+</script>
+</html>

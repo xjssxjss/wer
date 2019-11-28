@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="/common/header::header('上海因公出国')"></head>
+<style type="text/css">
+    .placeholder {
+        margin: 5px 5px -15px 5px;
+        padding: 0 0 0 10px;
+        height: 2.3em;
+        line-height: 2.3em;
+        text-align: center;
+        color: #cfcfcf;
+    }
+</style>
+<body ontouchstart>
+<div class="weui-tab">
+    <div class="weui-tab__bd">
+        <div id="index" class="weui-tab__bd-item weui-tab__bd-item--active">
+            <div th:replace="/index/index">
+
+            </div>
+        </div>
+        <div id="mine" class="weui-tab__bd-item">
+            <!--<div th:replace="/apec/apec_on_line">-->
+
+            <!--</div>-->
+
+            <div th:replace="/order/order">
+
+            </div>
+        </div>
+        <div id="callUs" class="weui-tab__bd-item">
+
+            <!-- APEC商务旅行卡申办 -->
+            <div class="weui-flex">
+                <div class="weui-flex__item">
+                    <div class="placeholder">- APEC商务旅行卡申办 -</div>
+                </div>
+            </div>
+            <!-- APEC商务旅行卡申办 -->
+
+            </br>
+
+            <div class="weui-form-preview">
+                <div class="weui-form-preview__bd">
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">地址：</label>
+                        <span class="weui-form-preview__value">上海市静安区华山路228号贵都商务楼3楼</span>
+                    </div>
+
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">联系电话:</label>
+                        <span class="weui-form-preview__value">021-22161600</span>
+                    </div>
+
+                    <div class="weui-form-preview__item">
+                        <label class="weui-form-preview__label">办公时间:</label>
+                        <span class="weui-form-preview__value">工作日 周一至周五 上午09:00-11:30</br>工作日 周一至周五 下午13:30-17:30</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="weui-tab tab-bottom" style="height:44px;">
+
+    <div class="weui-tabbar">
+        <a href="#index" class="weui-tabbar__item">
+                    <span style="display: inline-block;position: relative;">
+                        <i class="icon icon-27 f27 weui-tabbar__icon"></i>
+                        <span class="weui-badge" style="position: absolute;top: -2px;right: -13px;">8</span>
+                    </span>
+            <p class="weui-tabbar__label">首页</p>
+        </a>
+
+        <a href="#mine" class="weui-tabbar__item ">
+            <i class="icon icon-30 f27 weui-tabbar__icon" ></i>
+            <p class="weui-tabbar__label">我</p>
+        </a>
+
+        <a href="#callUs" class="weui-tabbar__item">
+                    <span style="display: inline-block;position: relative;">
+                        <i class="icon icon-29 f27 weui-tabbar__icon"></i>
+                        <span class="weui-badge weui-badge_dot" style="position: absolute;top: 0;right: -6px;"></span>
+                    </span>
+            <p class="weui-tabbar__label">联系我们</p>
+        </a>
+    </div>
+</div>
+</body>
+<!-- js事件 -->
+<script type="text/javascript">
+    $(function () {
+        FastClick.attach(document.body);
+
+        $('.weui-tab').tab({
+            defaultIndex: 0,
+            activeClass: 'weui-bar__item_on',
+            onToggle: function (index) {
+//                if (index > 0) {
+//
+//                    $.toast(index)
+//                }
+                if(index == 0){
+                    $('#index').addClass('weui-tab__bd-item--active');
+                    $('#callUs').removeClass("weui-tab__bd-item--active");
+                    $('#mine').removeClass("weui-tab__bd-item--active");
+                }
+
+                if(index == 1){
+                    $('#index').removeClass('weui-tab__bd-item--active');
+                    $('#callUs').removeClass("weui-tab__bd-item--active");
+                    $('#mine').addClass("weui-tab__bd-item--active");
+                }
+
+                if(index == 2){
+                    $('#index').removeClass('weui-tab__bd-item--active');
+                    $('#mine').removeClass('weui-tab__bd-item--active');
+                    $('#callUs').addClass("weui-tab__bd-item--active");
+                }
+            }
+        })
+    });
+</script>
+</html>
