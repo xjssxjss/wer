@@ -1,0 +1,20 @@
+.t_msg{
+    display: inline-block;
+    position: relative;
+    opacity: 0.8;
+    background:white url("http://192.168.0.100/attachments/images/bulletin.gif") no-repeat scroll 0 0;
+    top:0;
+    left: 1px;
+    color:rgba(255,255,255,0);
+    height: 19px;
+    line-height: 19px;
+}
+ul,li{ list-style:none;}
+.box{ height:35px; background:white; overflow:hidden;}
+.t_news{ height:19px;  color:white;padding-left:10px; margin:9px 0;overflow:hidden; position:relative;}
+.t_news b{ line-height:19px; font-weight:bold; display:inline-block;}
+.news_li,.swap{ line-height:19px; display:inline-block; position:absolute; top:0; left:0;}
+.news_li a,.swap a{ color:black;}
+.swap{top:19px;}
+.box a{ font-size:14px;}
+

@@ -52,11 +52,17 @@ public class WxController extends BaseController{
     @Autowired
     private DictionaryEntriesService dictionaryEntriesService;
 
-    @RequestMapping(value = "index")
-    public String index(){
-        dictionaryEntriesService.queryDictionaryEntriesByCode();
+    @RequestMapping(value = "tabbar")
+    public String tabbar(){
         //return GlobalConstant.APEC_ON_LINE;
         return "tabbar/tabbar";
+    }
+
+    @RequestMapping(value = "index")
+    public String index(){
+//        dictionaryEntriesService.queryDictionaryEntriesByCode();
+        //return GlobalConstant.APEC_ON_LINE;
+        return "index/index";
     }
 
     @RequestMapping(value = "apecSelect")
@@ -95,8 +101,8 @@ public class WxController extends BaseController{
             throw new BusinessException(ResultCode.getResult(408));
         }
 
+        //return GlobalConstant.VISA_CLAIM;
         return "tabbar/tabbar";
-//        return GlobalConstant.VISA_CLAIM;
     }
 
     @RequestMapping(value = "signIn")
@@ -176,7 +182,6 @@ public class WxController extends BaseController{
                                   Model model,
                                   HttpServletRequest request){
         Map<String,Object> resultMap = wxService.authorizeResult(code,request);
-        System.out.println("session"+request.getSession().getAttribute("userId"));
         //成功
         if((Boolean)resultMap.get("success")){
             return GlobalConstant.AGREEMENT_SUCCESS;

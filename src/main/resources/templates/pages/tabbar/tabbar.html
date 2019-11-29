@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head th:include="/common/header::header('上海因公出国')"></head>
+<head></head>
 <style type="text/css">
     .placeholder {
         margin: 5px 5px -15px 5px;
@@ -15,18 +15,12 @@
 <div class="weui-tab">
     <div class="weui-tab__bd">
         <div id="index" class="weui-tab__bd-item weui-tab__bd-item--active">
-            <div th:replace="/index/index">
+            <div th:include="/index/index">
 
             </div>
         </div>
         <div id="mine" class="weui-tab__bd-item">
-            <!--<div th:replace="/apec/apec_on_line">-->
-
-            <!--</div>-->
-
-            <div th:replace="/order/order">
-
-            </div>
+            <div th:replace="/order/order"></div>
         </div>
         <div id="callUs" class="weui-tab__bd-item">
 
@@ -67,7 +61,7 @@
         <a href="#index" class="weui-tabbar__item">
                     <span style="display: inline-block;position: relative;">
                         <i class="icon icon-27 f27 weui-tabbar__icon"></i>
-                        <span class="weui-badge" style="position: absolute;top: -2px;right: -13px;">8</span>
+                        <span class="weui-badge" style="position: absolute;top: -2px;right: -13px;">1</span>
                     </span>
             <p class="weui-tabbar__label">首页</p>
         </a>
@@ -97,7 +91,6 @@
             activeClass: 'weui-bar__item_on',
             onToggle: function (index) {
 //                if (index > 0) {
-//
 //                    $.toast(index)
 //                }
                 if(index == 0){

@@ -5,7 +5,6 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.thoughtworks.xstream.XStream;
 import com.wer.common.GlobalConstant;
-import com.wer.entity.AccessToken;
 import com.wer.entity.base.BaseMessage;
 import com.wer.entity.msg.NewsMessage;
 import com.wer.entity.msg.TextMessage;
@@ -39,7 +38,6 @@ import java.util.*;
  * @author: Sean
  * @version: V1.0
  */
-
 @Service
 @Transactional
 @Slf4j
@@ -47,6 +45,8 @@ public class WxService extends BaseService {
 
     @Autowired
     private VisaClaimService visaClaimService;
+
+    @Autowired WxUserAuthrizeService wxUserAuthrizeService;
 
     /**
      * 把java对象转化为xml
@@ -168,8 +168,11 @@ public class WxService extends BaseService {
         BaseMessage baseMessage = null;
         String[] visaCountrys = resourceMap.get("visa_countrys").split(",");
         String redirectUrl = null;
-        if(GlobalConstant.userList.contains(requestMap.get("FromUserName"))){
-            baseMessage = new TextMessage(requestMap,"您好，请先进行<a href='http://192.168.0.109:9999/wer/indexController/agreement'>认证</a>");
+
+        //requestMap.get("FromUserName"
+
+        if(!wxUserAuthrizeService.isExist(requestMap.get("FromUserName"))){
+            baseMessage = new TextMessage(requestMap,"您好，请先进行<a href='http://192.168.0.105:9999/wer/indexController/agreement'>认证</a>");
         } else {
             //说明查询的是国家护照签证信息
             if(!StringUtil.isEmpty(content) && content.startsWith("v")){
@@ -250,7 +253,7 @@ public class WxService extends BaseService {
         }
 
         if(null == baseMessage){
-            baseMessage = new TextMessage(requestMap, "您输入的信息未匹配,请重新输入");
+            baseMessage = new TextMessage(requestMap, "您输入的条件未匹配到信息,请重新输入");
         }
         return baseMessage;
     }
@@ -430,16 +433,22 @@ public class WxService extends BaseService {
                 //判断访问微信api是否成功
                 if(getWxApiResult(object)){
                     String userId = (String)object.get("UserId");
-                    //说明已经认证过了
-                    if(userId.equals(request.getSession().getAttribute("userId"))){
+                    //当前登录设备Id
+                    String devId = (String)object.get("DeviceId");
+
+                    //说明已经认证过了，查询认证信息中是否有信息
+                    if(wxUserAuthrizeService.isExist(userId)){
                         success = false;
                         message = GlobalConstant.ALREADTY_AUTHORIZE;
                     } else {
                         success = true;
                         message = GlobalConstant.SUCCESS_MESSAGE;
                         data = userId;
+
                         //把人员信息存到session
                         request.getSession().setAttribute("userId",userId);
+                        //把认证信息添加到数据库
+                        wxUserAuthrizeService.insertUserAuthrize(userId,devId);
                     }
                 }
             }

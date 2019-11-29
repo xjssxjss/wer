@@ -1,15 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=0">
-    <link rel="stylesheet" th:href="@{/common/css/weui.css}"/>
-    <link rel="stylesheet" th:href="@{/common/css/weuix.css}"/>
-    <!-- 引入swiper.js zepto.min.js-->
-    <!--<script th:src="@{/common/js/jquery-2.1.4.js}"></script>-->
-    <!--<script th:src="@{/common/js/jquery.min.js}"></script>-->
-    <script th:src="@{/common/js/zepto.min.js}"></script>
-    <script th:src="@{/common/js/swiper.js}"></script>
+<head th:include="/common/header::header('上海因公出国')">
+
 </head>
 <style type="text/css">
     .placeholder {
@@ -18,17 +10,21 @@
         height: 2.3em;
         line-height: 2.3em;
         text-align: center;
-        color: #cfcfcf;
+        color: black;
     }
 
-    .weui-mark-img .img-max{
-        margin: 0 auto;
-        display: table-cell;
-        width: 96%;
-        vertical-align: middle;
+    #header_div img{
+        display: block;
+        width: 100%;
+        height: 230px;
     }
 </style>
+
 <body ontouchstart>
+    <div id="header_div">
+        <img src="http://192.168.0.100/attachments/images/usa.jpg" />
+    </div>
+
     <div class="weui-grids">
         <a href="http://192.168.0.109:9999/wer/indexController/apecSelect" class="weui-grid js_grid">
             <div class="weui-grid__icon">
@@ -62,31 +58,35 @@
             <div class="placeholder">- 通知公告 -</div>
         </div>
     </div>
-    <!-- 通知公告 -->
 
-   <!-- <div class="weui-flex">
-        <div th:replace="/common/swiper"></div>
-    </div>
--->
+    <!-- 通知公告 列表 -->
     <div class="weui-flex">
         <div class="weui-flex__item">
             <div class="placeholder">
-                <div class="slide slide-m" id="slide3">
-                    <ul>
-                        <li>
-                            <div  class='txt'>空旷冷落的古旧行宫，只有宫花寂寞地艳红</div></li>
-                        <li>
-                            <div  class='txt'>几个满头白发的宫女，闲坐无事谈论唐玄宗</div>
-                        </li>
-                        <li>
-                            <div  class='txt'>但见泪痕湿，不知心恨谁</div>
-                        </li>
-                    </ul>
+                <div class="box">
+                    <div class="t_news">
+                        <ul class="news_li">
+                            <li>
+                                <div class="t_msg">66
+                                </div>
+                                <a href="http://www.baidu.com">英国领馆通知-2019年12月1号</a>
+                            </li>
+                            <li>
+                                <div class="t_msg">66
+                                </div>
+                                <a href="http://www.sina.cn">英国领馆通知-2019年12月5号</a></li>
+                            <li>
+                                <div class="t_msg">66
+                                </div>
+                                <a href="http://www.baozun.com">英国领馆通知-2019年12月8号</a>
+                            </li>
+                        </ul>
+                        <ul class="swap"></ul>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
 
     <div class="weui-cells">
         <a class="weui-cell weui-cell_access" href="javascript:;">
@@ -102,18 +102,17 @@
         <div class="weui-c-inner">
             <div class="weui-c-content">
                 <div class="weui-c-article">
-                    <p><img src="http://192.168.0.103/attachments/images/usa.jpg"></p>
+                    <p><img src="http://192.168.0.100/attachments/images/usa.jpg"></p>
                 </div>
                 <div class="weui-c-article">
-                    <p><img src="http://192.168.0.103/attachments/images/jianada.jpg"></p>
+                    <p><img src="http://192.168.0.100/attachments/images/jianada.jpg"></p>
                 </div>
                 <div class="weui-c-article">
-                    <p><img src="http://192.168.0.103/attachments/images/deguo.jpg"></p>
+                    <p><img src="http://192.168.0.100/attachments/images/deguo.jpg"></p>
                 </div>
             </div>
         </div>
     </div>
-
     </br>
 </body>
 <!-- js事件 -->

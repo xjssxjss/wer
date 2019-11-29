@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wer.dao.wx.auth.UserAuthrizeMapper" >
+  <resultMap id="BaseResultMap" type="com.wer.entity.wx.UserAuthrize" >
+    <id column="AUTH_ID" property="authId" jdbcType="VARCHAR" />
+    <result column="USER_ID" property="userId" jdbcType="VARCHAR" />
+    <result column="OPEN_ID" property="openId" jdbcType="VARCHAR" />
+    <result column="DEV_ID" property="devId" jdbcType="VARCHAR" />
+    <result column="AUTH_TIME" property="authTime" jdbcType="TIMESTAMP" />
+    <result column="IS_VALID" property="isValid" jdbcType="BIT" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    AUTH_ID, USER_ID, OPEN_ID, DEV_ID, AUTH_TIME, IS_VALID
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from t_wx_user_authorize
+    where AUTH_ID = #{authId,jdbcType=VARCHAR}
+  </select>
+
+  <select id="queryByParams" resultMap="BaseResultMap" parameterType="java.util.Map" >
+    select
+    <include refid="Base_Column_List" />
+    from t_wx_user_authorize
+    WHERE 1 = 1
+    <if test="userId != null">
+      AND USER_ID = #{userId,jdbcType=VARCHAR}
+    </if>
+    <if test="openId != null">
+      AND OPEN_ID = #{openId,jdbcType=VARCHAR}
+    </if>
+  </select>
+
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from t_wx_user_authorize
+    where AUTH_ID = #{authId,jdbcType=VARCHAR}
+  </delete>
+
+  <insert id="insert" parameterType="com.wer.entity.wx.UserAuthrize" >
+    insert into t_wx_user_authorize (AUTH_ID, USER_ID, OPEN_ID, 
+      DEV_ID, AUTH_TIME, IS_VALID
+      )
+    values (#{authId,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{openId,jdbcType=VARCHAR}, 
+      #{devId,jdbcType=VARCHAR}, #{authTime,jdbcType=TIMESTAMP}, #{isValid,jdbcType=BIT}
+      )
+  </insert>
+
+  <insert id="insertSelective" parameterType="com.wer.entity.wx.UserAuthrize" >
+    insert into t_wx_user_authorize
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="authId != null" >
+        AUTH_ID,
+      </if>
+      <if test="userId != null" >
+        USER_ID,
+      </if>
+      <if test="openId != null" >
+        OPEN_ID,
+      </if>
+      <if test="devId != null" >
+        DEV_ID,
+      </if>
+      <if test="authTime != null" >
+        AUTH_TIME,
+      </if>
+      <if test="isValid != null" >
+        IS_VALID,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="authId != null" >
+        #{authId,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="devId != null" >
+        #{devId,jdbcType=VARCHAR},
+      </if>
+      <if test="authTime != null" >
+        #{authTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null" >
+        #{isValid,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="updateByPrimaryKeySelective" parameterType="com.wer.entity.wx.UserAuthrize" >
+    update t_wx_user_authorize
+    <set >
+      <if test="userId != null" >
+        USER_ID = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="openId != null" >
+        OPEN_ID = #{openId,jdbcType=VARCHAR},
+      </if>
+      <if test="devId != null" >
+        DEV_ID = #{devId,jdbcType=VARCHAR},
+      </if>
+      <if test="authTime != null" >
+        AUTH_TIME = #{authTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isValid != null" >
+        IS_VALID = #{isValid,jdbcType=BIT},
+      </if>
+    </set>
+    where AUTH_ID = #{authId,jdbcType=VARCHAR}
+  </update>
+
+  <update id="updateByPrimaryKey" parameterType="com.wer.entity.wx.UserAuthrize" >
+    update t_wx_user_authorize
+    set USER_ID = #{userId,jdbcType=VARCHAR},
+      OPEN_ID = #{openId,jdbcType=VARCHAR},
+      DEV_ID = #{devId,jdbcType=VARCHAR},
+      AUTH_TIME = #{authTime,jdbcType=TIMESTAMP},
+      IS_VALID = #{isValid,jdbcType=BIT}
+    where AUTH_ID = #{authId,jdbcType=VARCHAR}
+  </update>
+</mapper>
