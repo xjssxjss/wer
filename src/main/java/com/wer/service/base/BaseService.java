@@ -3,19 +3,24 @@ package com.wer.service.base;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
+import com.github.pagehelper.PageHelper;
 import com.wer.common.BaseObject;
 import com.wer.common.GlobalConstant;
 import com.wer.dao.AttachmentMapper;
 import com.wer.dao.BaseMapper;
+import com.wer.dao.DictionaryEntriesMapper;
 import com.wer.dao.DictionaryMapper;
+import com.wer.entity.msg.Message;
 import com.wer.util.JedisUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import javax.validation.ConstraintViolation;
+import javax.validation.Validation;
+import javax.validation.Validator;
+import javax.validation.ValidatorFactory;
+import java.util.*;
 
 /**
  * 抽象类
@@ -25,11 +30,16 @@ public abstract class BaseService<T> extends BaseObject {
 
     private static Logger logger = LoggerFactory.getLogger(BaseService.class);
 
+    public static Validator validator = Validation.buildDefaultValidatorFactory().getValidator();
+
     @Autowired
     private BaseMapper<T> baseMapper;
 
     @Autowired
     public AttachmentMapper attachmentMapper;
+
+    @Autowired
+    public DictionaryEntriesMapper dictionaryEntriesMapper;
 
     public boolean success = false;
     public Object data = null;
@@ -47,9 +57,33 @@ public abstract class BaseService<T> extends BaseObject {
         synchronized (resultMap){
             resultMap.put("success",success);
             resultMap.put("message",message);
-            resultMap.put("data",success ? data: null);
+            resultMap.put("data",data);
         }
         return resultMap;
+    }
+
+    /**
+     * check实体验证信息
+     * @param validate
+     * @return
+     */
+    public String checkEntityResult(Set<ConstraintViolation<T>> validate){
+
+        //返回实体验证信息
+        StringBuffer sbf = new StringBuffer("");
+
+        //同步验证
+        synchronized (validate){
+            //获取迭代器
+            Iterator<ConstraintViolation<T>> iterator = validate.iterator();
+
+            while(iterator.hasNext()){
+                //拼接错误信息
+                sbf.append("<span style='color:red;'>"+iterator.next().getMessage()+"</span></br>");
+            }
+        }
+
+        return sbf.toString();
     }
 
     /**
@@ -173,5 +207,30 @@ public abstract class BaseService<T> extends BaseObject {
 
     public Object parseObject(String userForm,Object obj){
         return JSON.parseObject(userForm, new TypeReference<Object>() {});
+    }
+
+    public synchronized void startPage(Map<String,Object> pageMap){
+        Integer currentPage = 1;
+        Integer pageSize = 10;
+        String orderBy = "";
+        if(null != pageMap){
+
+            if(null != pageMap.get("currentPage")){
+                currentPage = (Integer) pageMap.get("currentPage");
+            }
+
+            if(null != pageMap.get("pageSize")){
+                pageSize = (Integer) pageMap.get("pageSize");
+            }
+
+            if(null != pageMap.get("orderBy")){
+                orderBy = (String) pageMap.get("orderBy");
+            }
+        }
+        try{
+            PageHelper.startPage(currentPage,pageSize,orderBy);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 }

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Map;
 
 /**
- * @description: TODO
+ * @description: baseController
  * @package_name: com.wer.controller.base
  * @data: 2019-11-20 14:42
  * @author: Sean
@@ -26,7 +26,7 @@ public class BaseController extends BaseObject{
     public Map<String,Object> getResultMap(Map<String,Object> resultMap){
         resultMap.put("success",resultMap.get("success"));
         resultMap.put("data",resultMap.get("data"));
-        resultMap.put("message",resultMap.get("message") == null || Boolean.parseBoolean(resultMap.get("success")==null ? "" : resultMap.get("success").toString()) ? "数据访问成功" : "数据访问失败!");
+        resultMap.put("message",resultMap.get("message"));
         return resultMap;
     }
 }

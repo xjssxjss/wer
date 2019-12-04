@@ -172,7 +172,7 @@ public class WxService extends BaseService {
         //requestMap.get("FromUserName"
 
         if(!wxUserAuthrizeService.isExist(requestMap.get("FromUserName"))){
-            baseMessage = new TextMessage(requestMap,"您好，请先进行<a href='http://192.168.0.105:9999/wer/indexController/agreement'>认证</a>");
+            baseMessage = new TextMessage(requestMap,"您好，请先进行<a href='"+resourceMap.get("server_url")+GlobalConstant.APP_PREFIX+"/indexController/agreement'>认证</a>");
         } else {
             //说明查询的是国家护照签证信息
             if(!StringUtil.isEmpty(content) && content.startsWith("v")){
@@ -189,7 +189,10 @@ public class WxService extends BaseService {
                             //获取VisaArticle对象
                             VisaArticle visaArticle = (VisaArticle)visaArticleObject.get("data");
                             paramMap.put("slipId",visaArticle.getId());
+
                             String url = visaArticle.getUrl()+content.substring(1,content.length());
+                            System.out.println("url:"+visaArticle.getUrl());
+
                             //根据slip_id查询附件信息
                             Attachment attachment = attachmentMapper.queryByParams(paramMap).get(0);
                             //拼接图片路径
@@ -475,6 +478,7 @@ public class WxService extends BaseService {
 
         //判断如果缓存中没有信息
         JsapiTicket jsapiTicket = null;
+        String ticket = null;
 
         if(StringUtil.isEmpty(jsApiTicket)){
             //获取ticket信息
@@ -483,17 +487,18 @@ public class WxService extends BaseService {
             //转换jsApiTicket对象
             jsapiTicket = JSON.parseObject(result,JsapiTicket.class);
 
+            ticket = jsapiTicket.getTicket();
+
             //把jsApiTicket票据放入缓存
             strings.setEx(GlobalConstant.REDIS_KEY_JS_API_TICKET,GlobalConstant.REDIS_KEY_EXPIRE_SECONDS,jsapiTicket.getTicket());
+        } else {
+            //获取临时票据
+            ticket = strings.get(GlobalConstant.REDIS_KEY_JS_API_TICKET);
         }
 
         //获取js-sdk调用的随机字符串
         String nonceStr = UUID.randomUUID().toString();
         log.info("随机字符串："+nonceStr);
-
-        //获取临时票据
-        String ticket = jsapiTicket.getTicket();
-        log.info("临时票据：{}" + ticket);
 
         //获取当前时间戳
         String timestamp = Long.toString((new Date().getTime()) / 1000);

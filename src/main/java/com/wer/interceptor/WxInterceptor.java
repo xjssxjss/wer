@@ -62,6 +62,15 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                 }
             }
         }
+
+        //判断所有需要session存在才能访问的地址
+        if(GlobalConstant.NEED_SESSION_URI.contains(request.getRequestURI())){
+            //说明需要session才能访问
+            if(null==request.getSession().getAttribute("userId")){
+                //throw new BusinessException("session 已过期");
+            }
+
+        }
 //        if(handler instanceof HandlerMethod){
 //            HandlerMethod hm = (HandlerMethod) handler;
 //            System.out.println("当前执行的对象是"+hm.getMethod());

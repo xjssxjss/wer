@@ -6,6 +6,7 @@ import com.wer.entity.visa.VisaArticle;
 import com.wer.service.base.BaseService;
 import com.wer.util.StringUtil;
 import com.wer.util.WebServiceClientUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,10 @@ import java.util.Map;
  * @author: Sean
  * @version: V1.0
  */
+@Slf4j
 @Service
 @Transactional
 public class VisaClaimService extends BaseService<VisaArticle>{
-
-    private static Logger logger = LoggerFactory.getLogger(VisaClaimService.class);
 
     @Autowired
     private VisaArticleMapper visaArticleMapper;

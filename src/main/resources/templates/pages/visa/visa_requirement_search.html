@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="/common/header::header('签证要求搜索')">
+</head>
+<style type="text/css">
+
+</style>
+<body ontouchstart>
+    <div class="weui-search-bar weui-search-bar_focusing" id="searchBar">
+        <form class="weui-search-bar__form">
+            <div class="weui-search-bar__box">
+                <i class="weui-icon-search"></i>
+                <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="请输入关键字" required="">
+                <a href="javascript:" class="weui-icon-clear" id="searchClear"></a>
+            </div>
+            <label class="weui-search-bar__label" id="searchText">
+                <i class="weui-icon-search"></i>
+                <span>搜索</span>
+            </label>
+        </form>
+        <a href="javascript:;" class="weui-btn weui-btn_mini  bg-green" id="btn-search">搜索</a>
+        <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
+    </div>
+
+    <div class="weui-news">
+        <!--<ul class="weui-news-list">
+            <li class="weui-news-item">
+                <div class="weui-news-inner">
+                    <div class="weui-news-inners">
+                        <div class="weui-news-text">
+                            <div class="weui-news-title">签证要求-美国(2019-10-08)</div>
+                        </div>
+                        <div class="weui-news-info">
+                            <div class="weui-news-infoitem">
+                                <span class="weui-news-left">上海外办</span>
+                            </div>
+                            <div class="weui-news-infoitem">2019-11-25 12:10:00</div>
+                        </div>
+                    </div>
+                    <div class="weui-news-media">
+                        <img src="http://192.168.0.100/attachments/images/usa.jpg">
+                    </div>
+                </div>
+            </li>
+            <li class="weui-news-item">
+                <div class="weui-news-inner">
+                    <div class="weui-news-inners">
+                        <div class="weui-news-text">
+                            <div class="weui-news-title">签证要求-墨西哥(2019-10-20)</div>
+                        </div>
+                        <div class="weui-news-info">
+                            <div class="weui-news-infoitem">
+                                <span class="weui-news-left">上外办</span>
+                            </div>
+                            <div class="weui-news-infoitem">2018-08-09 10:31</div>
+                        </div>
+                    </div>
+                    <div class="weui-news-media">
+                        <img src="http://192.168.0.100/attachments/images/moxige.jpg">
+                    </div>
+                </div>
+            </li>
+            <li class="weui-news-item">
+                <div class="weui-news-inner">
+                    <div class="weui-news-inners">
+                        <div class="weui-news-text">
+                            <div class="weui-news-title">签证要求-日本(2019-10-20)</div>
+                        </div>
+                        <div class="weui-news-info">
+                            <div class="weui-news-infoitem">
+                                <span class="weui-news-left">外办</span>
+                            </div>
+                            <div class="weui-news-infoitem">2018-08-09 10:31</div>
+                        </div>
+                    </div>
+                    <div class="weui-news-media">
+                        <img src="http://192.168.0.100/attachments/images/riben.jpg">
+                    </div>
+                </div>
+            </li>
+            <li class="weui-news-item">
+                <div class="weui-news-inner">
+                    <div class="weui-news-inners">
+                        <div class="weui-news-text">
+                            <div class="weui-news-title">签证要求-澳大利亚(2019-10-20)</div>
+                        </div>
+                        <div class="weui-news-info">
+                            <div class="weui-news-infoitem">
+                                <span class="weui-news-left">外办</span>
+                            </div>
+                            <div class="weui-news-infoitem">2018-08-09 10:31</div>
+                        </div>
+                    </div>
+                    <div class="weui-news-media">
+                        <img src="http://192.168.0.100/attachments/images/adly.jpg">
+                    </div>
+                </div>
+            </li>
+            <li class="weui-news-item">
+                <div class="weui-news-inner">
+                    <div class="weui-news-inners">
+                        <div class="weui-news-text">
+                            <div class="weui-news-title">签证要求-瑞士(2019-10-20)</div>
+                        </div>
+                        <div class="weui-news-info">
+                            <div class="weui-news-infoitem">
+                                <span class="weui-news-left">外办</span>
+                            </div>
+                            <div class="weui-news-infoitem">2018-08-09 10:31</div>
+                        </div>
+                    </div>
+                    <div class="weui-news-media">
+                        <img src="http://192.168.0.100/attachments/images/ruishi.jpg">
+                    </div>
+                </div>
+            </li>
+            <li class="weui-news-item">
+                <div class="weui-news-inner">
+                    <div class="weui-news-inners">
+                        <div class="weui-news-text">
+                            <div class="weui-news-title">签证要求-瑞士(2019-10-20)</div>
+                        </div>
+                        <div class="weui-news-info">
+                            <div class="weui-news-infoitem">
+                                <span class="weui-news-left">外办</span>
+                            </div>
+                            <div class="weui-news-infoitem">2018-08-09 10:31</div>
+                        </div>
+                    </div>
+                    <div class="weui-news-media">
+                        <img src="http://192.168.0.100/attachments/images/ruishi.jpg">
+                    </div>
+                </div>
+            </li>
+            <li class="weui-news-item">
+                <div class="weui-news-inner">
+                    <div class="weui-news-inners">
+                        <div class="weui-news-text">
+                            <div class="weui-news-title">签证要求-瑞士(2019-10-20)</div>
+                        </div>
+                        <div class="weui-news-info">
+                            <div class="weui-news-infoitem">
+                                <span class="weui-news-left">外办</span>
+                            </div>
+                            <div class="weui-news-infoitem">2018-08-09 10:31</div>
+                        </div>
+                    </div>
+                    <div class="weui-news-media">
+                        <img src="http://192.168.0.100/attachments/images/ruishi.jpg">
+                    </div>
+                </div>
+            </li>
+            <li class="weui-news-item">
+                <div class="weui-news-inner">
+                    <div class="weui-news-inners">
+                        <div class="weui-news-text">
+                            <div class="weui-news-title">签证要求-瑞士(2019-10-20)</div>
+                        </div>
+                        <div class="weui-news-info">
+                            <div class="weui-news-infoitem">
+                                <span class="weui-news-left">外办</span>
+                            </div>
+                            <div class="weui-news-infoitem">2018-08-09 10:31</div>
+                        </div>
+                    </div>
+                    <div class="weui-news-media">
+                        <img src="http://192.168.0.100/attachments/images/ruishi.jpg">
+                    </div>
+                </div>
+            </li>
+            <li class="weui-news-item">
+                <div class="weui-news-inner">
+                    <div class="weui-news-inners">
+                        <div class="weui-news-text">
+                            <div class="weui-news-title">签证要求-瑞士(2019-10-20)</div>
+                        </div>
+                        <div class="weui-news-info">
+                            <div class="weui-news-infoitem">
+                                <span class="weui-news-left">外办</span>
+                            </div>
+                            <div class="weui-news-infoitem">2018-08-09 10:31</div>
+                        </div>
+                    </div>
+                    <div class="weui-news-media">
+                        <img src="http://192.168.0.100/attachments/images/ruishi.jpg">
+                    </div>
+                </div>
+            </li>
+            <li class="weui-news-item">
+                <div class="weui-news-inner">
+                    <div class="weui-news-inners">
+                        <div class="weui-news-text">
+                            <div class="weui-news-title">签证要求-瑞士(2019-10-20)</div>
+                        </div>
+                        <div class="weui-news-info">
+                            <div class="weui-news-infoitem">
+                                <span class="weui-news-left">外办</span>
+                            </div>
+                            <div class="weui-news-infoitem">2018-08-09 10:31</div>
+                        </div>
+                    </div>
+                    <div class="weui-news-media">
+                        <img src="http://192.168.0.100/attachments/images/ruishi.jpg">
+                    </div>
+                </div>
+            </li>
+            <li class="weui-news-item">
+                <div class="weui-news-inner">
+                    <div class="weui-news-inners">
+                        <div class="weui-news-text">
+                            <div class="weui-news-title">签证要求-瑞士(2019-10-20)</div>
+                        </div>
+                        <div class="weui-news-info">
+                            <div class="weui-news-infoitem">
+                                <span class="weui-news-left">外办</span>
+                            </div>
+                            <div class="weui-news-infoitem">2018-08-09 10:31</div>
+                        </div>
+                    </div>
+                    <div class="weui-news-media">
+                        <img src="http://192.168.0.100/attachments/images/ruishi.jpg">
+                    </div>
+                </div>
+            </li>
+        </ul>-->
+        <div class="weui-loadmore weui-loadmore_line">
+            <span class="weui-loadmore__tips">暂无数据</span>
+        </div>
+    </div>
+</body>
+<!-- js事件 -->
+<script type="text/javascript">
+    //防止重复点击
+    var loading = false;
+
+    $(function(){
+
+        // 输入值时执行
+//        $('#searchInput').bind('input propertychange', function() {
+//            //sousuo($("#searchInput").val());
+//            //执行搜索方法
+//            $.toast($("#searchInput").val());
+//        });
+
+        //搜索功能
+        $(document).on("click", "#btn-search", function () {
+            var searchKey = $("#searchInput").val();
+
+            if(loading == false){
+                loading = true;
+                $.showLoading();
+                $.ajax({
+                    url:'http://192.168.0.122:9999/wer/visaRequirementsController/queryVisaRequirementsInfoBySearchKey',
+                    method:'get',
+                    data:{searcyKey:searchKey},
+                    dataType:'json',
+                    success:function (res) {
+                        if(res.success){
+                            $('.weui-news').html(res.data);
+                            $.hideLoading();
+                            loading = false;
+                        } else {
+                            $('.weui-news').html('<div class="weui-loadmore weui-loadmore_line"><span class="weui-loadmore__tips">暂无数据</span> </div>');
+                            $.hideLoading();
+                            loading = false;
+                        }
+                    },
+                    error:function (err) {
+                        $.hideLoading();
+                        loading = false;
+                    }
+                });
+            }
+
+
+
+            /*if(loading == false){
+                loading = true;
+                $.showLoading();
+                //说明等于瑞士
+                if('瑞士' == searchKey){
+                    contentHtml += '<div class="weui-news"><ul class="weui-news-list">';
+
+                    contentHtml += '<li class="weui-news-item"> <div class="weui-news-inner"> <div class="weui-news-inners"> <div class="weui-news-text"> <div class="weui-news-title">签证要求-瑞士(2019-10-20)</div> </div> <div class="weui-news-info"> <div class="weui-news-infoitem"> <span class="weui-news-left">外办</span> </div> <div class="weui-news-infoitem">2018-08-09 10:31</div> </div> </div> <div class="weui-news-media"> <img src="http://192.168.0.100/attachments/images/ruishi.jpg"> </div> </div> </li>';
+
+                    contentHtml += '</ul></div>';
+
+                    $('.weui-news').html(contentHtml);
+                    loading = false;
+                    $.hideLoading();
+                } else {
+                    $.toast('未匹配');
+                    contentHtml += '<div class="weui-loadmore weui-loadmore_line"><span class="weui-loadmore__tips">暂无数据</span> </div>';
+                    $('.weui-news').html(contentHtml);
+
+                    loading = false;
+                    $.hideLoading();
+                }
+            }*/
+        });
+    });
+</script>
+</html>

@@ -1,7 +1,6 @@
 package com.wer.service;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.wer.common.BusinessException;
 import com.wer.enums.ResultCode;
@@ -14,9 +13,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -27,9 +24,7 @@ import java.util.Map;
  * @version: V1.0
  */
 @Service
-public class MessageService extends BaseService{
-
-    private static Logger logger = LoggerFactory.getLogger(MessageService.class);
+public class WxMessageService extends BaseService{
 
     /**
      * 根据公告Id查询公告详情

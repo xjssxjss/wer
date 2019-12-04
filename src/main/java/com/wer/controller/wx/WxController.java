@@ -4,7 +4,9 @@ import com.wer.common.BusinessException;
 import com.wer.common.GlobalConstant;
 import com.wer.controller.base.BaseController;
 import com.wer.enums.ResultCode;
+import com.wer.service.msg.MessageService;
 import com.wer.service.sys.LogService;
+import com.wer.service.sys.SysSequenceCounterService;
 import com.wer.service.wx.WxService;
 import com.wer.service.sys.DictionaryEntriesService;
 import com.wer.util.HttpClientUtil;
@@ -40,7 +42,6 @@ import java.util.Map;
 @Controller
 @RequestMapping(value = "indexController")
 public class WxController extends BaseController{
-
     private static Logger logger = LoggerFactory.getLogger(WxController.class);
 
     @Autowired
@@ -48,9 +49,6 @@ public class WxController extends BaseController{
 
     @Autowired
     private LogService logService;
-
-    @Autowired
-    private DictionaryEntriesService dictionaryEntriesService;
 
     @RequestMapping(value = "tabbar")
     public String tabbar(){
@@ -69,6 +67,11 @@ public class WxController extends BaseController{
     public String apecSelect(){
         //return GlobalConstant.APEC_ON_LINE;
         return "apec/apec_select";
+    }
+
+    @RequestMapping(value = "msgPub")
+    public String msgPub(){
+        return "msg/msg_pub";
     }
 
     @RequestMapping(value = "apecOnLine")
@@ -103,6 +106,15 @@ public class WxController extends BaseController{
 
         //return GlobalConstant.VISA_CLAIM;
         return "tabbar/tabbar";
+    }
+
+    /**
+     * 跳转到签证要求搜索页面
+     * @return
+     */
+    @GetMapping(value = "redirectToVisaRequirementSearch")
+    public String redirectToVisaRequirementSearch(){
+        return "visa/visa_requirement_search";
     }
 
     @RequestMapping(value = "signIn")

@@ -1,19 +1,23 @@
 <!DOCTYPE html>
 <html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 <head th:include="/common/header::header('我的订单')"></head>
-
 <body ontouchstart>
-<div class="weui-tab">
-    <div id="tagnav" class="weui-navigator weui-navigator-wrapper">
-        <ul class="weui-navigator-list">
-            <li><a href="javascript:;">全部</a></li>
-            <li><a href="javascript:;">待支付</a></li>
-            <li><a href="javascript:;">进行中</a></li>
-            <li><a href="javascript:;">已完成</a></li>
-            <li><a href="javascript:;">已取消</a></li>
-        </ul>
+    <div class="weui-tab">
+        <div id="tagnav" class="weui-navigator weui-navigator-wrapper">
+            <ul class="weui-navigator-list">
+                <li class="order_li"><a href="javascript:;">全部</a></li>
+                <li class="order_li"><a href="javascript:;">待支付</a></li>
+                <li class="order_li"><a href="javascript:;">进行中</a></li>
+                <li class="order_li"><a href="javascript:;">已完成</a></li>
+                <li class="order_li"><a href="javascript:;">已取消</a></li>
+            </ul>
+        </div>
+
+        <div class="weui-loadmore weui-loadmore_line">
+            <span class="weui-loadmore__tips">暂无数据</span>
+        </div>
     </div>
-</div>
+
 </body>
 <!-- js事件 -->
 <script type="text/javascript">
@@ -25,7 +29,7 @@
         });
 
         //获取li标签列表
-        var li = document.getElementsByTagName('li');
+        var li = document.getElementsByClassName('order_li');
         for(var i = 0;i<li.length;i++){
             (function(Index){
                 //监听click时间

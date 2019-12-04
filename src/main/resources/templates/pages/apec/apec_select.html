@@ -3,11 +3,10 @@
 <head th:include="/common/header::header('APEC卡办理')"></head>
 <body ontouchstart class="page">
 
-
     <div class="page-bd-15">
         </br>
-        <a href="http://192.168.0.109:9999/wer/indexController/apecOnLine" class="weui-btn weui-btn_primary">APEC卡在线申办</a>
-        <a href="javascript:;" class="weui-btn weui-btn_primary">APEC卡提前制卡申请</a>
+        <a href="http://spro.free.idcfengye.com/wer/indexController/apecOnLine" class="weui-btn weui-btn_primary">APEC卡在线申办</a>
+        <a href="http://spro.free.idcfengye.com/wer/indexController/msgPub" class="weui-btn weui-btn_primary">APEC卡提前制卡申请</a>
         <a href="javascript:;" class="weui-btn weui-btn_primary">APEC卡更换护照申请</a>
         <a href="javascript:;" class="weui-btn weui-btn_primary">APEC卡办卡进度查询</a>
     </div>
@@ -17,10 +16,5 @@
     $(function () {
         FastClick.attach(document.body);
     });
-    //关闭当前窗口
-    function close(){
-        document.addEventListener('WeixinJSBridgeReady', function(){ WeixinJSBridge.call('closeWindow'); }, false);
-        WeixinJSBridge.call('closeWindow');
-    }
 </script>
 </html>

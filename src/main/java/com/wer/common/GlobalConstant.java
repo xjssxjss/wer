@@ -476,6 +476,8 @@ public class GlobalConstant {
         logger.info("放入visaDataMap数据 end");
     }
     //项目前缀
+    public static String APP_PREFIX = "wer";
+    //缓存key前缀
     public static String KEY_PREFIX = "wer";
     //redis key分割符
     public static String KEY_SPLIT_CHAR = ":";
@@ -494,6 +496,8 @@ public class GlobalConstant {
 
     public static final String ERROR_MESSAGE = "数据访问失败!!";
 
+    public static final String FORM_CHAKED_INVALID = "验证信息";
+
     public static final String ALREADTY_AUTHORIZE = "已经认证通过，请勿重新认证";
 
     //附件类型
@@ -509,6 +513,9 @@ public class GlobalConstant {
     public static final String JOIN_QR_CODE_CLICK = "join_qr_code_click";
 
     public static final String INTER_URIS_STR = "/wer/messageController/queryMessageByMsgId,";
+
+    //需要session才能访问的地址
+    public static final String NEED_SESSION_URI = "/wer/indexController/apecSelect,";
 
     /**
      * 跳转界面
@@ -548,4 +555,8 @@ public class GlobalConstant {
     //JS_API_TICKET
     public static final String REDIS_KEY_JS_API_TICKET = "js_api_ticket";
     //************************************redis keys end******************************//
+
+    //***********************************公告信息begin***************************************//
+    public static final String MESSAGE_ID_PREFIX = "msg";
+    //**************************************公告信息end************************************//
 }

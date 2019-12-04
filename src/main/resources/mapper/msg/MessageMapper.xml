@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wer.dao.msg.MessageMapper" >
+  <resultMap id="BaseResultMap" type="com.wer.entity.msg.Message" >
+    <result column="MSG_ID" property="msgId" jdbcType="VARCHAR" />
+    <result column="MSG_TITLE" property="msgTitle" jdbcType="VARCHAR" />
+    <result column="MSG_CONTENT" property="msgContent" jdbcType="VARCHAR" />
+    <result column="MSG_START_DATE" property="msgStartDate" jdbcType="TIMESTAMP" />
+    <result column="MSG_END_DATE" property="msgEndDate" jdbcType="TIMESTAMP" />
+    <result column="MSG_PUB_TIME" property="msgPubTime" jdbcType="TIMESTAMP" />
+    <result column="MSG_PUB_USER_ID" property="msgPubUserId" jdbcType="VARCHAR" />
+    <result column="MSG_TYPE" property="msgType" jdbcType="INTEGER" />
+    <result column="MSG_ATTACHMENT_ID" property="msgAttachmentId" jdbcType="INTEGER" />
+    <result column="MSG_IS_VALID" property="msgIsValid" jdbcType="BIT" />
+    <result column="MSG_IS_DELETE" property="msgIsDelete" jdbcType="BIT" />
+  </resultMap>
+
+  <sql id="Base_Column_List" >
+    MSG_ID, MSG_TITLE, MSG_CONTENT, MSG_START_DATE, MSG_END_DATE, MSG_PUB_TIME, MSG_PUB_USER_ID, MSG_TYPE,
+    MSG_ATTACHMENT_ID, MSG_IS_VALID, MSG_IS_DELETE
+  </sql>
+
+  <insert id="insert" parameterType="com.wer.entity.msg.Message" >
+    insert into t_message (MSG_ID, MSG_TITLE, MSG_CONTENT, 
+      MSG_START_DATE, MSG_END_DATE, MSG_PUB_TIME, 
+      MSG_PUB_USER_ID, MSG_TYPE, MSG_ATTACHMENT_ID, 
+      MSG_IS_VALID, MSG_IS_DELETE)
+    values (#{msgId,jdbcType=VARCHAR}, #{msgTitle,jdbcType=VARCHAR}, #{msgContent,jdbcType=VARCHAR}, 
+      #{msgStartDate,jdbcType=TIMESTAMP}, #{msgEndDate,jdbcType=TIMESTAMP}, #{msgPubTime,jdbcType=TIMESTAMP}, 
+      #{msgPubUserId,jdbcType=VARCHAR}, #{msgType,jdbcType=INTEGER}, #{msgAttachmentId,jdbcType=INTEGER}, 
+      #{msgIsValid,jdbcType=BIT}, #{msgIsDelete,jdbcType=BIT})
+  </insert>
+  <insert id="insertSelective" parameterType="com.wer.entity.msg.Message" >
+    insert into t_message
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="msgId != null" >
+        MSG_ID,
+      </if>
+      <if test="msgTitle != null" >
+        MSG_TITLE,
+      </if>
+      <if test="msgContent != null" >
+        MSG_CONTENT,
+      </if>
+      <if test="msgStartDate != null" >
+        MSG_START_DATE,
+      </if>
+      <if test="msgEndDate != null" >
+        MSG_END_DATE,
+      </if>
+      <if test="msgPubTime != null" >
+        MSG_PUB_TIME,
+      </if>
+      <if test="msgPubUserId != null" >
+        MSG_PUB_USER_ID,
+      </if>
+      <if test="msgType != null" >
+        MSG_TYPE,
+      </if>
+      <if test="msgAttachmentId != null" >
+        MSG_ATTACHMENT_ID,
+      </if>
+      <if test="msgIsValid != null" >
+        MSG_IS_VALID,
+      </if>
+      <if test="msgIsDelete != null" >
+        MSG_IS_DELETE,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="msgId != null" >
+        #{msgId,jdbcType=VARCHAR},
+      </if>
+      <if test="msgTitle != null" >
+        #{msgTitle,jdbcType=VARCHAR},
+      </if>
+      <if test="msgContent != null" >
+        #{msgContent,jdbcType=VARCHAR},
+      </if>
+      <if test="msgStartDate != null" >
+        #{msgStartDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="msgEndDate != null" >
+        #{msgEndDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="msgPubTime != null" >
+        #{msgPubTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="msgPubUserId != null" >
+        #{msgPubUserId,jdbcType=VARCHAR},
+      </if>
+      <if test="msgType != null" >
+        #{msgType,jdbcType=INTEGER},
+      </if>
+      <if test="msgAttachmentId != null" >
+        #{msgAttachmentId,jdbcType=INTEGER},
+      </if>
+      <if test="msgIsValid != null" >
+        #{msgIsValid,jdbcType=BIT},
+      </if>
+      <if test="msgIsDelete != null" >
+        #{msgIsDelete,jdbcType=BIT},
+      </if>
+    </trim>
+  </insert>
+
+  <!-- 根据参数查询信息 -->
+  <select id="queryByParams" resultMap="BaseResultMap">
+    SELECT
+    <include refid="Base_Column_List" />
+    from t_message
+    WHERE 1 = 1
+    <if test="msgId != null" >
+      AND MSG_ID = #{msgId,jdbcType=VARCHAR}
+    </if>
+    AND MSG_IS_VALID = 1
+    AND MSG_IS_DELETE = 0
+  </select>
+</mapper>

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="/common/header::header(${msg.data.msgTitle})">
+</head>
+
+<body ontouchstart class="page">
+    <div class="page-bd">
+        <div class="weui-cells">
+            <div class="weui-cell">
+                <div class="weui-cell__bd">执行日期</div>
+                <div class="weui-cell__ft" th:text="${msg.data.msgStartDate}"></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd">结束日期</div>
+                <div class="weui-cell__ft" th:text="${msg.data.msgEndDate}"></div>
+            </div>
+            <div class="weui-cell">
+                <div class="weui-cell__bd" th:utext="${msg.data.msgContent}"></div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
