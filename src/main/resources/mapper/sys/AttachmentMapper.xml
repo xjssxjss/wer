@@ -14,6 +14,12 @@
     <result column="FILE_SIZE" property="fileSize" jdbcType="VARCHAR" />
     <result column="REMARK" property="remark" jdbcType="VARCHAR" />
     <result column="IS_VALID" property="isValid" jdbcType="BIT" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="IS_DELETED" property="isDeleted" jdbcType="BIT" />
+
     <association resultMap="attachFileType" property="attach"></association>
   </resultMap>
 
@@ -26,7 +32,8 @@
 
   <sql id="Base_Column_List" >
     ID, SLIP_ID, SLIP_TYPE, FILE_NAME, FILE_SAVE_NAME, FILE_PATH, FILE_TYPE, UPLOAD_TIME, 
-    UPLOAD_USER, FILE_SIZE, REMARK, IS_VALID
+    UPLOAD_USER, FILE_SIZE, REMARK, IS_VALID, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME,
+    IS_DELETED
   </sql>
 
   <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
@@ -40,7 +47,13 @@
     select
     <include refid="Base_Column_List" />
     from t_sys_attachments
-    where SLIP_ID = #{slipId,jdbcType=INTEGER}
+    where 1=1
+    <if test="slipId != null" >
+      and SLIP_ID = #{slipId,jdbcType=VARCHAR}
+    </if>
+    <if test="uploadUser != null" >
+      and UPLOAD_USER = #{uploadUser,jdbcType=VARCHAR}
+    </if>
   </select>
 
   <!-- 分页查询附件列表 -->
@@ -69,18 +82,27 @@
     delete from t_sys_attachments
     where ID = #{id,jdbcType=INTEGER}
   </delete>
+
   <insert id="insert" parameterType="com.wer.entity.sys.Attachment" >
-    insert into t_sys_attachments (ID, SLIP_ID, SLIP_TYPE, 
-      FILE_NAME, FILE_SAVE_NAME, FILE_PATH, 
-      FILE_TYPE, UPLOAD_TIME, UPLOAD_USER, 
-      FILE_SIZE, REMARK, IS_VALID
+    <selectKey resultType="java.lang.Integer" order="AFTER" keyProperty="id">
+    SELECT LAST_INSERT_ID()
+  </selectKey>
+    insert into t_sys_attachments (ID, SLIP_ID, SLIP_TYPE,
+      FILE_NAME, FILE_SAVE_NAME, FILE_PATH,
+      FILE_TYPE, UPLOAD_TIME, UPLOAD_USER,
+      FILE_SIZE, REMARK, IS_VALID,
+      CREATE_BY, CREATE_TIME, UPDATE_BY,
+      UPDATE_TIME, IS_DELETED
       )
-    values (#{id,jdbcType=INTEGER}, #{slipId,jdbcType=DECIMAL}, #{slipType,jdbcType=VARCHAR}, 
-      #{fileName,jdbcType=VARCHAR}, #{fileSaveName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR}, 
-      #{fileType,jdbcType=INTEGER}, #{uploadTime,jdbcType=TIMESTAMP}, #{uploadUser,jdbcType=VARCHAR}, 
-      #{fileSize,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{isValid,jdbcType=BIT}
+    values (#{id,jdbcType=INTEGER}, #{slipId,jdbcType=DECIMAL}, #{slipType,jdbcType=VARCHAR},
+      #{fileName,jdbcType=VARCHAR}, #{fileSaveName,jdbcType=VARCHAR}, #{filePath,jdbcType=VARCHAR},
+      #{fileType,jdbcType=INTEGER}, #{uploadTime,jdbcType=TIMESTAMP}, #{uploadUser,jdbcType=VARCHAR},
+      #{fileSize,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, #{isValid,jdbcType=BIT},
+      #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP}, #{updateBy,jdbcType=VARCHAR},
+      #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}
       )
   </insert>
+
   <insert id="insertSelective" parameterType="com.wer.entity.sys.Attachment" >
     insert into t_sys_attachments
     <trim prefix="(" suffix=")" suffixOverrides="," >
@@ -120,6 +142,21 @@
       <if test="isValid != null" >
         IS_VALID,
       </if>
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="isDeleted != null" >
+        IS_DELETED,
+      </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
       <if test="id != null" >
@@ -157,6 +194,21 @@
       </if>
       <if test="isValid != null" >
         #{isValid,jdbcType=BIT},
+      </if>
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -196,6 +248,21 @@
       <if test="isValid != null" >
         IS_VALID = #{isValid,jdbcType=BIT},
       </if>
+      <if test="createBy != null" >
+        CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null" >
+        IS_DELETED = #{isDeleted,jdbcType=BIT},
+      </if>
     </set>
     where ID = #{id,jdbcType=INTEGER}
   </update>
@@ -211,7 +278,12 @@
       UPLOAD_USER = #{uploadUser,jdbcType=VARCHAR},
       FILE_SIZE = #{fileSize,jdbcType=VARCHAR},
       REMARK = #{remark,jdbcType=VARCHAR},
-      IS_VALID = #{isValid,jdbcType=BIT}
+      IS_VALID = #{isValid,jdbcType=BIT},
+      CREATE_BY = #{createBy,jdbcType=VARCHAR},
+      CREATE_TIME = #{createTime,jdbcType=TIMESTAMP},
+      UPDATE_BY = #{updateBy,jdbcType=VARCHAR},
+      UPDATE_TIME = #{updateTime,jdbcType=TIMESTAMP},
+      IS_DELETED = #{isDeleted,jdbcType=BIT}
     where ID = #{id,jdbcType=INTEGER}
   </update>
 </mapper>

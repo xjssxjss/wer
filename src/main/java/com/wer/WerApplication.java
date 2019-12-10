@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -41,10 +42,21 @@ public class WerApplication extends SpringBootServletInitializer implements WebM
 	 * @param registry
 	 */
 	public void addInterceptors(InterceptorRegistry registry) {
+		//添加拦截器
+		InterceptorRegistration registration = registry.addInterceptor(new WxInterceptor());
 		// 多个拦截器组成一个拦截器链
 		// addPathPatterns 用于添加拦截规则
 		// excludePathPatterns 用户排除拦截
-		registry.addInterceptor(new WxInterceptor()).addPathPatterns("/**");
+		//排除的路径
+		registration.excludePathPatterns("/indexController");
+
+		//静态文件不拦截
+		registration.excludePathPatterns("/index.html","/","/**/*.css",
+				"/**/*.js", "/**/*.png", "/**/*.jpg",
+				"/**/*.jpeg", "/**/*.gif", "/**/fonts/*");
+
+		//拦截全部
+		registration.addPathPatterns("/**");
 	}
 
 	@Override

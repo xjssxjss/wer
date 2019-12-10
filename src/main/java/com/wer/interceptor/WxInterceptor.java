@@ -3,19 +3,23 @@ package com.wer.interceptor;
 import com.wer.common.BusinessException;
 import com.wer.common.GlobalConstant;
 import com.wer.enums.ResultCode;
+import com.wer.util.ContextUtil;
 import com.wer.util.DateUtil;
 import com.wer.util.StringUtil;
 import com.wer.util.WxUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.ModelAndView;
 import org.springframework.web.servlet.handler.HandlerInterceptorAdapter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
 /**
- * @description: TODO
+ * @description: 自定义拦截器
  * @package_name: com.wer.interceptor
  * @data: 2019-11-11 17:17
  * @author: Sean
@@ -31,12 +35,21 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
                              HttpServletResponse response,
                              Object handler) throws Exception {
 
+        logger.info("用户session信息："+ ContextUtil.getCurrentUser());
+//        if(StringUtil.isEmpty(ContextUtil.getCurrentUser())){
+//            throw new BusinessException(ResultCode.getResult(406));
+//        }
+
+        if(handler instanceof HandlerMethod){
+            HandlerMethod hm = (HandlerMethod) handler;
+            System.out.println("当前执行的对象是"+hm.getMethod());
+        }
+
         //getSign
         String sign = request.getParameter("sign");
         String timestamp = request.getParameter("timestamp");
 
         System.out.println("请求地址>>>>>>>>>>>>>>>>>:"+request.getRequestURI());
-        //GlobalConstant.INTER_URIS.
 
         System.out.println("判断地址是否存在>>>>>>>>>>>>>>>>>"+GlobalConstant.INTER_URIS_STR.contains(request.getRequestURI()));
         if(GlobalConstant.INTER_URIS_STR.contains(request.getRequestURI())){
@@ -71,27 +84,10 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
             }
 
         }
-//        if(handler instanceof HandlerMethod){
-//            HandlerMethod hm = (HandlerMethod) handler;
-//            System.out.println("当前执行的对象是"+hm.getMethod());
-//        }
-//
-//        HttpSession session = request.getSession();
-//        //判断用户是否登录
-//        //User user = (User)session.getAttribute("user");
-//
-//        String username = (String)session.getAttribute("user");
-//        //说明用户还没有登录
-//        if(null == username){
-//            //跳转到登录界面
-//            response.sendRedirect(request.getContextPath() + "/login.html");
-//            return false;
-//        }
-
 
         System.out.println("获取上下文："+request.getContextPath());
 //        if(1==1){
-//            response.sendRedirect( "http://192.168.0.115:9999/wer/auth/authorize");
+//            response.sendRedirect( "http://192.168.0.131:9999/wer/auth/authorize");
 //            return false;
 //        }
 

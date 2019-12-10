@@ -69,6 +69,18 @@ public class WxController extends BaseController{
         return "apec/apec_select";
     }
 
+    @RequestMapping(value = "userInfo")
+    public String userInfo(){
+        //return GlobalConstant.APEC_ON_LINE;
+        return "userinfo/userinfo";
+    }
+
+    @RequestMapping(value = "redirectToOrder")
+    public String redirectToOrder(){
+        //return GlobalConstant.APEC_ON_LINE;
+        return "order/order";
+    }
+
     @RequestMapping(value = "msgPub")
     public String msgPub(){
         return "msg/msg_pub";
@@ -90,7 +102,7 @@ public class WxController extends BaseController{
      * @param model
      * @return
      */
-    @RequestMapping(value = "visaClaim")
+    @GetMapping(value = "visaClaim")
     public String visaClaim(@RequestParam(name = "countryName")
                             String countryName,
                             Model model){
@@ -104,8 +116,7 @@ public class WxController extends BaseController{
             throw new BusinessException(ResultCode.getResult(408));
         }
 
-        //return GlobalConstant.VISA_CLAIM;
-        return "tabbar/tabbar";
+        return GlobalConstant.VISA_CLAIM;
     }
 
     /**

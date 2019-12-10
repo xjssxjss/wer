@@ -559,4 +559,14 @@ public class GlobalConstant {
     //***********************************公告信息begin***************************************//
     public static final String MESSAGE_ID_PREFIX = "msg";
     //**************************************公告信息end************************************//
+
+    //附件类型
+    //图片附件类型
+    public static final String DIC_ATTACHMENT_IMAGE = "attachmentImage";
+
+
+
+    /********************************业务类型****************************/
+    public static final String SLIT_TYPE_NOTICE_MESSAGE = "notice_message";
+    /********************************业务类型***************************/
 }

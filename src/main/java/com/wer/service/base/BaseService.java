@@ -5,21 +5,28 @@ import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.TypeReference;
 import com.github.pagehelper.PageHelper;
 import com.wer.common.BaseObject;
+import com.wer.common.BusinessException;
 import com.wer.common.GlobalConstant;
 import com.wer.dao.AttachmentMapper;
 import com.wer.dao.BaseMapper;
 import com.wer.dao.DictionaryEntriesMapper;
 import com.wer.dao.DictionaryMapper;
+import com.wer.entity.base.EntitySupport;
 import com.wer.entity.msg.Message;
+import com.wer.enums.ResultCode;
+import com.wer.util.ContextUtil;
 import com.wer.util.JedisUtil;
+import com.wer.util.StringUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import sun.misc.BASE64Decoder;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -38,15 +45,12 @@ public abstract class BaseService<T> extends BaseObject {
     @Autowired
     public AttachmentMapper attachmentMapper;
 
-    @Autowired
-    public DictionaryEntriesMapper dictionaryEntriesMapper;
-
     public boolean success = false;
     public Object data = null;
     public String message = GlobalConstant.ERROR_MESSAGE;
 
     //返回结果集对象
-    private static Map<String,Object> resultMap = new HashMap();
+    private Map<String,Object> resultMap = new HashMap();
 
     /**
      * 封装返回前台的结果集
@@ -106,7 +110,21 @@ public abstract class BaseService<T> extends BaseObject {
      * @throws Exception
      */
     public int insert(T entity) throws Exception{
-        int result= baseMapper.insert(entity);
+        //说明entity继承了EntitySupport父类
+        if(entity instanceof EntitySupport){
+            EntitySupport e = (EntitySupport)entity;
+            if(null == e.getDeleted()){
+                e.setDeleted(false);
+            }
+            if(null == e.getCreateTime()){
+                e.setCreateTime(new Date());
+            }
+            if(StringUtil.isEmpty(e.getCreateBy())){
+                e.setCreateBy(ContextUtil.getCurrentUser());
+            }
+            //保存日志
+        }
+        int result = baseMapper.insert(entity);
         return result;
     }
 
@@ -163,6 +181,20 @@ public abstract class BaseService<T> extends BaseObject {
      * @throws Exception
      */
     public int update(T entity)throws Exception{
+        //说明entity继承了EntitySupport父类
+        if(entity instanceof EntitySupport){
+            EntitySupport e = (EntitySupport)entity;
+            if(null == e.getDeleted()){
+                e.setDeleted(false);
+            }
+            if(null == e.getUpdateTime()){
+                e.setUpdateTime(new Date());
+            }
+            if(StringUtil.isEmpty(e.getUpdateBy())){
+                e.setUpdateBy(ContextUtil.getCurrentUser());
+            }
+            //保存日志
+        }
         return baseMapper.updateByPrimaryKey(entity);
     }
 
@@ -232,5 +264,36 @@ public abstract class BaseService<T> extends BaseObject {
         }catch (Exception e){
             e.printStackTrace();
         }
+    }
+
+    /**
+     * base64 转字节数组
+     * @param data
+     * @return
+     */
+    public synchronized InputStream base64ToBytes(String data){
+        String base64Data = data.replaceAll("data:image/jpeg;base64,", "");
+        OutputStream os = null;
+        InputStream inputStream = null;
+        byte[] bytes = null;
+
+        //将字符串转换为byte数组
+        try {
+            bytes = new BASE64Decoder().decodeBuffer(base64Data.trim());
+        } catch (IOException e) {
+            throw new BusinessException(e.getMessage());
+        }
+
+        //转化为输入字节流
+        inputStream = new ByteArrayInputStream(bytes);
+
+//            os = new FileOutputStream("e:\\"+newFileName);
+//
+//            byte[] b = new byte[2014];
+//            int len;
+//            while(((len = inputStream.read(b)) != -1)){
+//                os.write(b,0,len);
+//            }
+        return inputStream;
     }
 }

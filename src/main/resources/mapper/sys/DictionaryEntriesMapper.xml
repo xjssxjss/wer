@@ -64,7 +64,8 @@
     AND  is_valid = 1
   </select>
 
-  <select id="queryByCode" resultMap="BaseResultMap">
+  <!-- 根据code获取字典信息 -->
+  <select id="queryByCode" resultMap="BaseResultMap" parameterType="java.lang.String">
     SELECT
     <include refid="Base_Column_List" />
     from t_bi_dictionary_entries

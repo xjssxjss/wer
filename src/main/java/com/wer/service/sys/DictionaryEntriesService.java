@@ -53,4 +53,13 @@ public class DictionaryEntriesService extends BaseService<DictionaryEntries>{
         }
         return result();
     }
+
+    /**
+     * 根据code查询数据字典信息
+     * @param code
+     * @return
+     */
+    public DictionaryEntries queryByCode(String code){
+        return dictionaryEntriesMapper.queryByCode(code);
+    }
  }

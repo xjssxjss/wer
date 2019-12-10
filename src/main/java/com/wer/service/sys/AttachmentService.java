@@ -29,4 +29,14 @@ public class AttachmentService extends BaseService<Attachment>{
     public List<Attachment> findAttachmentBySlipId(Integer slipId){
         return null;
     }
+
+    /**
+     * insert 录入附件数据信息
+     * @return
+     */
+    public int insertAttachment(Attachment attachment) throws Exception{
+        return insert(attachment);
+    }
+
+
 }

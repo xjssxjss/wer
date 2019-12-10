@@ -1,11 +1,16 @@
 package com.wer.entity.msg;
 
+import com.wer.entity.base.EntitySupport;
+
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
-public class Message implements Serializable {
+/**
+ * 所有Entity的父类
+ */
+public class Message extends EntitySupport {
     private String msgId;
 
     @NotEmpty(message = "公告标题不允许为空")
@@ -26,11 +31,10 @@ public class Message implements Serializable {
 
     private Integer msgType;
 
+    @NotNull(message = "公告附件不可为空")
     private Integer msgAttachmentId;
 
     private Boolean msgIsValid;
-
-    private Boolean msgIsDelete;
 
     public String getMsgId() {
         return msgId;
@@ -112,14 +116,6 @@ public class Message implements Serializable {
         this.msgIsValid = msgIsValid;
     }
 
-    public Boolean getMsgIsDelete() {
-        return msgIsDelete;
-    }
-
-    public void setMsgIsDelete(Boolean msgIsDelete) {
-        this.msgIsDelete = msgIsDelete;
-    }
-
     @Override
     public String toString() {
         return "Message{" +
@@ -133,7 +129,6 @@ public class Message implements Serializable {
                 ", msgType=" + msgType +
                 ", msgAttachmentId=" + msgAttachmentId +
                 ", msgIsValid=" + msgIsValid +
-                ", msgIsDelete=" + msgIsDelete +
                 '}';
     }
 }

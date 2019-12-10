@@ -3,6 +3,7 @@ function b(){
 	t = parseInt(x.css('top'));
 	y.css('top','19px');
 
+	console.log('t>>>>>>>>>>>>>>>>>>>>>>>>>>>'+t);
 	if(t == 18){
 		t = 0;
 	}
@@ -26,7 +27,7 @@ $(document).ready(function(){
 
     //加载滚动数据
     $.ajax({
-        url:'http://192.168.0.122:9999/wer/messageController/queryTop5MessageInfo',
+        url:'http://192.168.0.131:9999/wer/messageController/queryTop5MessageInfo',
         method:'get',
         dataType:'json',
 		sync:false,
@@ -44,6 +45,7 @@ $(document).ready(function(){
             }
         },
         error:function (err) {
+            alert('连接失败');
         }
     });
 

@@ -8,6 +8,7 @@ public enum ResultCode {
     NOT_FOUND(404,"接口不存在"),             //接口不存在,
     TIMESTAMP_TIME_OUT(407,"时间戳已失效"), //说明时间戳已超过24H
     WEBSERVICE_CONN_FAIL(405,"服务接口连接失败"),
+    SESSION_INVALID(406,"session已失效"),
     VISA_COUNTRY_NOT_FOUNT(408,"签证要求国家未匹配,请重新输入"),
     INTERNAL_SERVER_ERROR(500,"服务器内部错误"); //服务器内部错误
 

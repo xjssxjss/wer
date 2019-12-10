@@ -7,14 +7,17 @@ import com.wer.entity.msg.Message;
 import com.wer.entity.sys.Attachment;
 import com.wer.entity.sys.DictionaryEntries;
 import com.wer.service.base.BaseService;
+import com.wer.service.sys.AttachmentService;
+import com.wer.service.sys.DictionaryEntriesService;
 import com.wer.service.sys.SysSequenceCounterService;
-import com.wer.util.DateUtil;
+import com.wer.util.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolation;
+import java.io.*;
 import java.util.*;
 
 /**
@@ -32,6 +35,12 @@ public class MessageService extends BaseService<Message>{
 
     @Autowired
     private SysSequenceCounterService sequenceCounterService;
+
+    @Autowired
+    private AttachmentService attachmentService;
+
+    @Autowired
+    private DictionaryEntriesService dictionaryEntriesService;
 
     /**
      * 新增公告信息
@@ -56,10 +65,9 @@ public class MessageService extends BaseService<Message>{
                 data = "<span style='color:red'>生效日期必须在失效日期之前</span>";
             } else {
                 //设置主键Id
-                msg.setMsgId(sequenceCounterService.generateCode(Message.class.getName(),GlobalConstant.MESSAGE_ID_PREFIX));
                 msg.setMsgIsValid(true);
                 msg.setMsgPubTime(new Date());
-                msg.setMsgIsDelete(false);
+                msg.setDeleted(false);
 
                 try {
                     insert(msg);
@@ -102,7 +110,7 @@ public class MessageService extends BaseService<Message>{
 
                     String startDate = DateUtil.parseDateToStr(msg.getMsgStartDate(),DateUtil.DATE_TIME_FORMAT_YYYY年MM月DD日);
 
-                    contentHtml.append("<a href="+resourceMap.get("server_url")+GlobalConstant.APP_PREFIX+"/messageController/queryMessageByMesssgeId?msgId="+msg.getMsgId()+">"+msg.getMsgTitle()+"-"+startDate+"</a></li>");
+                    contentHtml.append("<a href="+resourceMap.get("server_url")+GlobalConstant.APP_PREFIX+"/messageController/queryMessageByMesssgeId?msgId="+msg.getMsgId()+"&sign="+ WxUtil.getSign(DateUtil.getCurrentTimeStamp())+"&timestamp="+DateUtil.getCurrentTimeStamp()+">"+msg.getMsgTitle()+"-"+startDate+"</a></li>");
                 }
                 contentHtml.append("</ul>");
                 contentHtml.append("<ul class=\"swap\"></ul>");
@@ -149,6 +157,92 @@ public class MessageService extends BaseService<Message>{
         }
 
         //查询message信息
+        return result();
+    }
+
+    /**
+     * 上传通知公告图片
+     * @param data
+     * @param fileName
+     * @param fileSize
+     */
+    public Map<String,Object> uploadMessageImage(String data, String fileName, Integer fileSize,String messageId) {
+        //获取文件名后缀
+        String ext = fileName.substring(fileName.lastIndexOf("."),fileName.length());
+
+        //提前新增公告信息
+        Message message = new Message();
+
+        //实例化附件对象
+        Attachment attachment = new Attachment();
+
+        synchronized (message){
+            String msgId = null;
+            //if(StringUtil.isEmpty(messageId)){
+                //生成主键ID
+                msgId = sequenceCounterService.generateCode(Message.class.getName(),GlobalConstant.MESSAGE_ID_PREFIX);
+                //设置公告信息主键
+                message.setMsgId(msgId);
+//            } else {
+//                //说明messageId有数据，表示已经上传了
+//                //根据messageId 根据messageId查询附件信息
+//                Map<String,String> param = new HashMap<>();
+//                param.put("uploadUser",messageId);
+//                List<Attachment> attachmentList = attachmentMapper.queryByParams(param);
+//                if(null != attachmentList && attachmentList.size()>0){
+//                    Attachment attr = attachmentList.get(0);
+//                    attr.setIsValid(false);
+//                    //修改状态为false
+//                    attachmentMapper.updateByPrimaryKey(attr);
+//                }
+//            }
+
+            //base64转化为字节数组
+            InputStream inputStream = base64ToBytes(data);
+
+            //新文件名前缀
+            String newFilePrefixName = UUID.randomUUID().toString();
+
+            //新文件名
+            String newFileName = newFilePrefixName + ext;
+
+            //获取图片数据字典信息
+            DictionaryEntries dictionaryEntries = dictionaryEntriesService.queryByCode(GlobalConstant.DIC_ATTACHMENT_IMAGE);
+
+            attachment.setFileName(fileName);
+            attachment.setFileSaveName(newFileName);
+            attachment.setUploadTime(new Date());
+            attachment.setFileSize(String.valueOf(fileSize));
+            //图片附件类型
+            attachment.setFileType(dictionaryEntries.getId());
+            //设置主键ID
+            attachment.setSlipId(msgId);
+            //fileType业务类型
+            attachment.setSlipType(GlobalConstant.SLIT_TYPE_NOTICE_MESSAGE);
+            attachment.setIsValid(true);
+            attachment.setFileType(1027);
+            attachment.setUploadUser(ContextUtil.getCurrentUser());
+
+            //插入附件信息,返回录入的主键信息
+            try {
+                int insertLen = attachmentService.insertAttachment(attachment);
+                if(insertLen>0){
+                    message.setMsgAttachmentId(attachment.getId());
+                }
+                Map<String,Object> dataMap = new HashMap<>();
+
+                dataMap.put("msgId",message.getMsgId());
+                dataMap.put("attachmentId",attachment.getId());
+
+                super.data = dataMap;
+                super.message = GlobalConstant.SUCCESS_MESSAGE;
+                success = true;
+            } catch (Exception e) {
+                success = false;
+                super.message = GlobalConstant.ERROR_MESSAGE;
+                super.data = e.getMessage();
+            }
+        }
         return result();
     }
 }

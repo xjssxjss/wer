@@ -73,12 +73,11 @@ public class MessageController extends BaseController{
     }
 
     /**
-     * 查询前五条最新的公告信息
+     * 根据公告Id查询公告信息
      */
     @GetMapping(value = "queryMessageByMesssgeId")
     public String queryMessageByMesssgeId(Model model,
-                                      @RequestParam(value = "msgId") String msgId){
-
+                                          @RequestParam(value = "msgId") String msgId){
         //查询message信息
         model.addAttribute("msg", messageService.queryMessageByMsgId(msgId));
         return "msg/msg_detail_01";
@@ -91,62 +90,8 @@ public class MessageController extends BaseController{
     @ResponseBody
     public Map<String,Object> uploadMessageImage(@RequestParam("imgbase64") String data,
                                      @RequestParam("fileName") String fileName,
-                                     @RequestParam("fileSize") String fileSize) throws IOException {
-        String base64Data =  null;
-        /**
-         * 2.解码成字节数组
-         */
-
-        // 通过base64来转化图片
-        base64Data = data.replaceAll("data:image/jpeg;base64,", "");
-
-        BASE64Decoder decoder = new BASE64Decoder();
-        //连接ftp
-        FTPUtils instance = FTPUtils.getInstance();
-
-        //将字符串转换为byte数组
-        byte[] bytes = new byte[1024];
-        try {
-            bytes = new BASE64Decoder().decodeBuffer(base64Data.trim());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        String ext = fileName.substring(fileName.lastIndexOf("."),fileName.length());
-        //转化为输入流
-        InputStream inputStream = new ByteArrayInputStream(bytes);
-        OutputStream os = null;
-        instance.storeFile("192.168.0.100","/attachment/images/",UUID.randomUUID().toString()+ext,inputStream);
-       // boolean flag = instance.uploadFile("192.168.0.100","/attachment/images/", UUID.randomUUID().toString()+ext,inputStream);
-        try {
-            os = new FileOutputStream("e:\\"+UUID.randomUUID().toString()+ext);
-            byte[] b = new byte[2014];
-            int len;
-
-            while(((len = inputStream.read(b)) != -1)){
-                os.write(b,0,len);
-            }
-
-        }catch (Exception e){
-
-        } finally {
-            System.out.println("写出成功");
-            try {
-                os.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            inputStream.close();
-        }
-
-
-
-
-        Map<String,Object> map = new HashMap<>();
-        //说明上传文件成功
-        //if(flag){
-            map.put("success",true);
-        //}
-        //查询message信息
-        return map;
+                                     @RequestParam("fileSize") Integer fileSize,
+                                     @RequestParam("msgId") String msgId) throws IOException {
+        return messageService.uploadMessageImage(data,fileName,fileSize,msgId);
     }
 }

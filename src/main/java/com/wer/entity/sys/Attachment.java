@@ -1,12 +1,14 @@
 package com.wer.entity.sys;
 
+import com.wer.entity.base.EntitySupport;
+
 import java.io.Serializable;
 import java.util.Date;
 
-public class Attachment implements Serializable{
+public class Attachment extends EntitySupport{
     private Integer id;
 
-    private Long slipId;
+    private String slipId;
 
     private String slipType;
 
@@ -38,11 +40,11 @@ public class Attachment implements Serializable{
         this.id = id;
     }
 
-    public Long getSlipId() {
+    public String getSlipId() {
         return slipId;
     }
 
-    public void setSlipId(Long slipId) {
+    public void setSlipId(String slipId) {
         this.slipId = slipId;
     }
 

@@ -7,7 +7,7 @@
 </style>
 <body ontouchstart>
     <div class="weui-search-bar weui-search-bar_focusing" id="searchBar">
-        <form class="weui-search-bar__form">
+        <form class="weui-search-bar__form" onkeydown="if(event.keyCode==13) return false;">
             <div class="weui-search-bar__box">
                 <i class="weui-icon-search"></i>
                 <input type="search" class="weui-search-bar__input" id="searchInput" placeholder="请输入关键字" required="">
@@ -18,7 +18,7 @@
                 <span>搜索</span>
             </label>
         </form>
-        <a href="javascript:;" class="weui-btn weui-btn_mini  bg-green" id="btn-search">搜索</a>
+        <a href="javascript:;" class="weui-btn weui-btn_mini bg-green" id="btn-search">搜索</a>
         <a href="javascript:" class="weui-search-bar__cancel-btn" id="searchCancel">取消</a>
     </div>
 
@@ -234,13 +234,42 @@
     var loading = false;
 
     $(function(){
+        $('#searchInput').bind('input propertychange', function() {
 
-        // 输入值时执行
-//        $('#searchInput').bind('input propertychange', function() {
-//            //sousuo($("#searchInput").val());
-//            //执行搜索方法
-//            $.toast($("#searchInput").val());
-//        });
+        });
+
+        $('#searchInput').bind('keypress', function(event) {   //回车事件绑定 
+            if (event.keyCode == "13") {  //js监测到为为回车事件时 触发
+                var searchKey = $("#searchInput").val();
+
+                if(loading == false) {
+                    loading = true;
+                    $.showLoading();
+                    $.ajax({
+                        url: 'http://192.168.0.131:9999/wer/visaRequirementsController/queryVisaRequirementsInfoBySearchKey',
+                        method: 'get',
+                        data: {searcyKey: searchKey},
+                        dataType: 'json',
+                        success: function (res) {
+                            if (res.success) {
+                                $('.weui-news').html(res.data);
+                                $.hideLoading();
+                                loading = false;
+                            } else {
+                                $('.weui-news').html('<div class="weui-loadmore weui-loadmore_line"><span class="weui-loadmore__tips">暂无数据</span> </div>');
+                                $.hideLoading();
+                                loading = false;
+                            }
+                        },
+                        error: function (err) {
+                            $.hideLoading();
+                            loading = false;
+                        }
+                    });
+                }
+            }
+            event.preventDefault();   //阻止页面自动刷新，重复加载
+        });  
 
         //搜索功能
         $(document).on("click", "#btn-search", function () {
@@ -250,15 +279,27 @@
                 loading = true;
                 $.showLoading();
                 $.ajax({
-                    url:'http://192.168.0.122:9999/wer/visaRequirementsController/queryVisaRequirementsInfoBySearchKey',
+                    url:'http://192.168.0.131:9999/wer/visaRequirementsController/queryVisaRequirementsInfoBySearchKey',
                     method:'get',
                     data:{searcyKey:searchKey},
                     dataType:'json',
                     success:function (res) {
                         if(res.success){
-                            $('.weui-news').html(res.data);
+                            $('.weui-news').html(res.data.contentHtml);
                             $.hideLoading();
                             loading = false;
+
+                            //获取li标签列表
+                            var li = document.getElementsByClassName('weui-news-item');
+                            for(var i = 0;i<li.length;i++){
+                                (function(Index){
+                                    //监听click时间
+                                    li[i].addEventListener('click',function(e){
+                                        //检测到点击的信息后，调用后台,跳转到详情页
+                                        window.location.href = "http://192.168.0.131:9999/wer/indexController/visaClaim?countryName="+res.data.countryName;
+                                    },false);
+                                })(i)
+                            }
                         } else {
                             $('.weui-news').html('<div class="weui-loadmore weui-loadmore_line"><span class="weui-loadmore__tips">暂无数据</span> </div>');
                             $.hideLoading();
@@ -271,32 +312,6 @@
                     }
                 });
             }
-
-
-
-            /*if(loading == false){
-                loading = true;
-                $.showLoading();
-                //说明等于瑞士
-                if('瑞士' == searchKey){
-                    contentHtml += '<div class="weui-news"><ul class="weui-news-list">';
-
-                    contentHtml += '<li class="weui-news-item"> <div class="weui-news-inner"> <div class="weui-news-inners"> <div class="weui-news-text"> <div class="weui-news-title">签证要求-瑞士(2019-10-20)</div> </div> <div class="weui-news-info"> <div class="weui-news-infoitem"> <span class="weui-news-left">外办</span> </div> <div class="weui-news-infoitem">2018-08-09 10:31</div> </div> </div> <div class="weui-news-media"> <img src="http://192.168.0.100/attachments/images/ruishi.jpg"> </div> </div> </li>';
-
-                    contentHtml += '</ul></div>';
-
-                    $('.weui-news').html(contentHtml);
-                    loading = false;
-                    $.hideLoading();
-                } else {
-                    $.toast('未匹配');
-                    contentHtml += '<div class="weui-loadmore weui-loadmore_line"><span class="weui-loadmore__tips">暂无数据</span> </div>';
-                    $('.weui-news').html(contentHtml);
-
-                    loading = false;
-                    $.hideLoading();
-                }
-            }*/
         });
     });
 </script>

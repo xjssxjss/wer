@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,9 +34,13 @@ public class VisaRequirementsService extends BaseService<VisaVisit>{
         //获取信息
         Map<String, Object> visaDataMap = GlobalConstant.visaDataMap;
 
+        //返回前台的Map对象
+        Map<String,Object> resultMap = new HashMap<>();
+
         //循环Map
         for(Map.Entry dataMap:visaDataMap.entrySet()){
             if(searcyKey.equals(dataMap.getKey())){
+                resultMap.put("countryName",dataMap.getKey());
 
                 contentHtml.append("<div class=\"weui-news\"><ul class=\"weui-news-list\">");
                 VisaVisit value = (VisaVisit)dataMap.getValue();
@@ -58,8 +63,9 @@ public class VisaRequirementsService extends BaseService<VisaVisit>{
         }
 
         if(!StringUtil.isEmpty(contentHtml.toString())){
+            resultMap.put("contentHtml",contentHtml.toString());
             success = true;
-            data = contentHtml.toString();
+            data = resultMap;
         } else {
             success = false;
         }

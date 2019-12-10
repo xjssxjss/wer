@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head th:include="/common/header::header('我的信息')"></head>
+<body ontouchstart>
+    <div class="weui-cells">
+        <a class="weui-cell weui-cell_access" th:href="@{/indexController/redirectToOrder}">
+            <div class="weui-cell__bd">
+                <p>我的订单</p>
+            </div>
+            <div class="weui-cell__ft">
+            </div>
+        </a>
+        <a class="weui-cell weui-cell_access" href="javascript:;">
+            <div class="weui-cell__bd">
+                <p>关于我们</p>
+            </div>
+            <div class="weui-cell__ft">
+            </div>
+        </a>
+    </div>
+
+
+    <div class="weui-grids" style="text-align: center;">
+        <a href="javascript:;" class="grid" >
+            <div class="weui-grid__icon">
+                <img src="http://192.168.0.100/attachments/images/usa.jpg" alt="">
+            </div>
+            <p class="weui-grid__label">
+                待支付
+            </p>
+        </a>
+        <a href="javascript:;" class="grid" >
+            <div class="weui-grid__icon">
+                <img src="http://192.168.0.100/attachments/images/usa.jpg" alt="">
+            </div>
+            <p class="weui-grid__label">
+                进行中
+            </p>
+        </a>
+        <a href="javascript:;" class="grid" >
+            <div class="weui-grid__icon">
+                <img src="http://192.168.0.100/attachments/images/usa.jpg" alt="">
+            </div>
+            <p class="weui-grid__label">
+                全部订单
+            </p>
+        </a>
+    </div>
+</body>
+<!-- js事件 -->
+<script type="text/javascript">
+
+</script>
+</html>

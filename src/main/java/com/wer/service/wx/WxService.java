@@ -69,7 +69,13 @@ public class WxService extends BaseService {
      * @param requestMap
      * @return
      */
-    private String getResponseXml(Map<String, String> requestMap) {
+    private String getResponseXml(Map<String, String> requestMap,HttpServletRequest request) {
+
+        //首先判断session是否存在
+        if(StringUtil.isEmpty(ContextUtil.getCurrentUser())){
+            request.getSession().setAttribute("userId",requestMap.get("FromUserName"));
+        }
+
         BaseMessage baseMessage = null;
         //获取微信企业号发送的消息类型
         String msgType = requestMap.get(GlobalConstant.WX_MSG_TYPE);
@@ -130,7 +136,6 @@ public class WxService extends BaseService {
                     //护照签证查询点击
                     baseMessage = new TextMessage(requestMap,"请回复“v国家名称”,例如“v美国”");
                 } else if(GlobalConstant.JOIN_QR_CODE_CLICK.equals(eventKey)){
-                    String mediaId = "";
                     String result = HttpClientUtil.doGet(resourceMap.get("get_join_qr_code").replace("ACCESS_TOKEN", getAddressBookAccessToken()).replace("SIZE_TYPE", "2"));
 
                     //把返回的结果转化为对象
@@ -158,8 +163,8 @@ public class WxService extends BaseService {
      * @return
      */
     private BaseMessage dealTextMessage(Map<String, String> requestMap) {
-
         String content = requestMap.get("Content");
+        log.info("获取session："+ContextUtil.getCurrentUser());
 
         String subContent = content.substring(1,content.length());
 
@@ -173,6 +178,10 @@ public class WxService extends BaseService {
 
         if(!wxUserAuthrizeService.isExist(requestMap.get("FromUserName"))){
             baseMessage = new TextMessage(requestMap,"您好，请先进行<a href='"+resourceMap.get("server_url")+GlobalConstant.APP_PREFIX+"/indexController/agreement'>认证</a>");
+        } else if(!StringUtil.isEmpty(content) && content.equals("发布公告")){
+            baseMessage = new TextMessage(requestMap,"请点击，<a href='"+resourceMap.get("server_url")+GlobalConstant.APP_PREFIX+"/indexController/msgPub'>发布公告</a>");
+        } else if(!StringUtil.isEmpty(content) && content.equals("主页")){
+            baseMessage = new TextMessage(requestMap,"请点击，<a href='"+resourceMap.get("server_url")+GlobalConstant.APP_PREFIX+"/indexController/tabbar'>主页</a>");
         } else {
             //说明查询的是国家护照签证信息
             if(!StringUtil.isEmpty(content) && content.startsWith("v")){
@@ -233,8 +242,6 @@ public class WxService extends BaseService {
                                             resourceMap.get("redirect_to_msg_detail").replace("MSG_ID",
                                                     (String)object.get("stMessageId")).replace("SIGN",sign).
                                                     replace("TIMESTAMP",DateUtil.getCurrentTimeStamp());
-                            System.out.println(redirectUrl);
-                            System.out.println(resourceMap.get("image_server_url")+"attachment/images/tzgg.jpg");
                             article = new Article(
                                     dtPublish+(String)object.get("stTitle"),
                                     null,
@@ -305,7 +312,7 @@ public class WxService extends BaseService {
             Map<String, String> parseXmlMap = parseXmlToMap(decryMsg);
             System.out.println("解析Xml:" + parseXmlMap.toString());
 
-            respXml = getResponseXml(parseXmlMap);
+            respXml = getResponseXml(parseXmlMap,request);
         } catch (IOException e) {
             e.printStackTrace();
         }

@@ -12,23 +12,31 @@
     <result column="MSG_TYPE" property="msgType" jdbcType="INTEGER" />
     <result column="MSG_ATTACHMENT_ID" property="msgAttachmentId" jdbcType="INTEGER" />
     <result column="MSG_IS_VALID" property="msgIsValid" jdbcType="BIT" />
-    <result column="MSG_IS_DELETE" property="msgIsDelete" jdbcType="BIT" />
+    <result column="CREATE_BY" property="createBy" jdbcType="VARCHAR" />
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="UPDATE_BY" property="updateBy" jdbcType="VARCHAR" />
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="IS_DELETED" property="isDeleted" jdbcType="BIT" />
   </resultMap>
 
   <sql id="Base_Column_List" >
     MSG_ID, MSG_TITLE, MSG_CONTENT, MSG_START_DATE, MSG_END_DATE, MSG_PUB_TIME, MSG_PUB_USER_ID, MSG_TYPE,
-    MSG_ATTACHMENT_ID, MSG_IS_VALID, MSG_IS_DELETE
+    MSG_ATTACHMENT_ID, MSG_IS_VALID, CREATE_BY, CREATE_TIME, UPDATE_BY, UPDATE_TIME, IS_DELETED
   </sql>
 
   <insert id="insert" parameterType="com.wer.entity.msg.Message" >
     insert into t_message (MSG_ID, MSG_TITLE, MSG_CONTENT, 
       MSG_START_DATE, MSG_END_DATE, MSG_PUB_TIME, 
       MSG_PUB_USER_ID, MSG_TYPE, MSG_ATTACHMENT_ID, 
-      MSG_IS_VALID, MSG_IS_DELETE)
-    values (#{msgId,jdbcType=VARCHAR}, #{msgTitle,jdbcType=VARCHAR}, #{msgContent,jdbcType=VARCHAR}, 
-      #{msgStartDate,jdbcType=TIMESTAMP}, #{msgEndDate,jdbcType=TIMESTAMP}, #{msgPubTime,jdbcType=TIMESTAMP}, 
-      #{msgPubUserId,jdbcType=VARCHAR}, #{msgType,jdbcType=INTEGER}, #{msgAttachmentId,jdbcType=INTEGER}, 
-      #{msgIsValid,jdbcType=BIT}, #{msgIsDelete,jdbcType=BIT})
+      MSG_IS_VALID, CREATE_BY, CREATE_TIME,
+      UPDATE_BY, UPDATE_TIME, IS_DELETED
+      )
+    values (#{msgId,jdbcType=VARCHAR}, #{msgTitle,jdbcType=VARCHAR}, #{msgContent,jdbcType=VARCHAR},
+      #{msgStartDate,jdbcType=TIMESTAMP}, #{msgEndDate,jdbcType=TIMESTAMP}, #{msgPubTime,jdbcType=TIMESTAMP},
+      #{msgPubUserId,jdbcType=VARCHAR}, #{msgType,jdbcType=INTEGER}, #{msgAttachmentId,jdbcType=INTEGER},
+      #{msgIsValid,jdbcType=BIT}, #{createBy,jdbcType=VARCHAR}, #{createTime,jdbcType=TIMESTAMP},
+      #{updateBy,jdbcType=VARCHAR}, #{updateTime,jdbcType=TIMESTAMP}, #{isDeleted,jdbcType=BIT}
+      )
   </insert>
   <insert id="insertSelective" parameterType="com.wer.entity.msg.Message" >
     insert into t_message
@@ -63,8 +71,20 @@
       <if test="msgIsValid != null" >
         MSG_IS_VALID,
       </if>
-      <if test="msgIsDelete != null" >
-        MSG_IS_DELETE,
+      <if test="createBy != null" >
+        CREATE_BY,
+      </if>
+      <if test="createTime != null" >
+        CREATE_TIME,
+      </if>
+      <if test="updateBy != null" >
+        UPDATE_BY,
+      </if>
+      <if test="updateTime != null" >
+        UPDATE_TIME,
+      </if>
+      <if test="isDeleted != null" >
+        IS_DELETED,
       </if>
     </trim>
     <trim prefix="values (" suffix=")" suffixOverrides="," >
@@ -98,8 +118,20 @@
       <if test="msgIsValid != null" >
         #{msgIsValid,jdbcType=BIT},
       </if>
-      <if test="msgIsDelete != null" >
-        #{msgIsDelete,jdbcType=BIT},
+      <if test="createBy != null" >
+        #{createBy,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateBy != null" >
+        #{updateBy,jdbcType=VARCHAR},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDeleted != null" >
+        #{isDeleted,jdbcType=BIT},
       </if>
     </trim>
   </insert>
@@ -114,6 +146,6 @@
       AND MSG_ID = #{msgId,jdbcType=VARCHAR}
     </if>
     AND MSG_IS_VALID = 1
-    AND MSG_IS_DELETE = 0
+    AND IS_DELETED = 0
   </select>
 </mapper>
