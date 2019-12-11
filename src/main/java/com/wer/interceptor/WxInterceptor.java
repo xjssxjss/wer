@@ -82,7 +82,6 @@ public class WxInterceptor extends HandlerInterceptorAdapter {
             if(null==request.getSession().getAttribute("userId")){
                 //throw new BusinessException("session 已过期");
             }
-
         }
 
         System.out.println("获取上下文："+request.getContextPath());

@@ -539,8 +539,8 @@ public class GlobalConstant {
     public static final String AGREEMENT_SUCCESS = "auth/success";
     //认证失败页面
     public static final String AGREEMENT_ERROR = "auth/error";
-
-    public static Set<String> userList = new HashSet<>();
+    //tabbar主页信息
+    public static final String TABBAR = "tabbar/tabbar";
 
     //***********************************redis keys begin*******************************//
     //key失效时间

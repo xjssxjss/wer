@@ -2,6 +2,7 @@ package com.wer.controller.wx;
 
 import com.wer.common.BusinessException;
 import com.wer.common.GlobalConstant;
+import com.wer.common.duplicate.DuplicateSubmitToken;
 import com.wer.controller.base.BaseController;
 import com.wer.enums.ResultCode;
 import com.wer.service.msg.MessageService;
@@ -201,6 +202,7 @@ public class WxController extends BaseController{
      * @return
      */
     @GetMapping(value = "authorizeResponse")
+    @DuplicateSubmitToken
     public String authorizeResult(@RequestParam(value = "code") String code,
                                   Model model,
                                   HttpServletRequest request){
@@ -213,6 +215,22 @@ public class WxController extends BaseController{
             model.addAttribute("message",resultMap.get("message"));
             return GlobalConstant.AGREEMENT_ERROR;
         }
+    }
+
+    /**
+     * 获取用户信息
+     * @param code
+     * @param model
+     * @return
+     */
+    @GetMapping(value = "getUserInfo")
+    public String getUserInfo(@RequestParam(value = "code") String code,
+                                  Model model,
+                                  HttpServletRequest request){
+        //放入session
+        Map<String,Object> resultMap = wxService.getUserInfo(code,request);
+
+        return GlobalConstant.TABBAR;
     }
 
     /**

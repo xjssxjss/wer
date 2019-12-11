@@ -108,6 +108,41 @@
                 }
             }
         })
+
+        var siteUrl = encodeURIComponent(window.location.href.split('#')[0]); //(地址是获取当前页面的地址)比较重要
+        $.ajax({
+            url : "http://spro.free.idcfengye.com/wer/indexController/getConfigInfo?url="+siteUrl,
+            type : "get",
+            dataType : "JSON",
+            async:true,
+            success : function(data) {
+                let wxConfig = {
+                    debug : false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                    beta : true,
+                    appId : data.appId, // 必填，企业微信的corpID
+                    timestamp : data.timestamp, // 必填，生成签名的时间戳
+                    nonceStr : data.nonceStr, // 必填，生成签名的随机串
+                    signature : data.signature,// 必填，签名，见附录1
+                    jsApiList: [
+                        "onMenuShareTimeline",
+                        "onMenuShareQQ",
+                        "hideOptionMenu",
+                        "onUserCaptureScreen"
+                    ]
+                };
+                //配置js-sdk
+                wx.config(wxConfig);
+
+                wx.ready(function() {
+                    //隐藏分享接口
+                    wx.hideOptionMenu();
+                });
+
+                wx.error(function (res) {
+                    $.alert('调用微信js-sdk失败');
+                });
+            }
+        })
     });
 </script>
 </html>

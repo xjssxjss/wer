@@ -16,12 +16,7 @@ import javax.servlet.http.HttpServletRequest;
 public class ContextUtil {
     //获取当前登录用户名
     public static String getCurrentUser(){
-
-        RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
         //从获取RequestAttributes中获取HttpServletRequest的信息
-        HttpServletRequest req = (HttpServletRequest) requestAttributes.resolveReference(RequestAttributes.REFERENCE_REQUEST);
-        System.out.println("req:::"+req.getSession().getAttribute("userId"));
-
         HttpServletRequest request = ((ServletRequestAttributes)RequestContextHolder.getRequestAttributes()).getRequest();
         System.out.println("session:"+request.getSession().getAttribute("userId"));
         return (null == request.getSession().getAttribute("userId")) ? "":request.getSession().getAttribute("userId")+"";

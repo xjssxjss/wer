@@ -470,6 +470,49 @@ public class WxService extends BaseService {
     }
 
     /**
+     * 通过用户授权code获取用户信息
+     * @param code
+     * @return
+     */
+    public Map<String,Object> getUserInfo(String code,HttpServletRequest request){
+        //获取用户信息url
+        String url = resourceMap.get("get_user_info_url");
+
+        //获取当前生效的token
+        String token = getAccessToken();
+        try{
+            //判断code是否为空
+            if(!StringUtil.isEmpty(code)){
+                //替换获取用户信息url
+                String getVisitInfoUrl = url.replace("ACCESS_TOKEN",token).replace("CODE",code);
+
+                //发起获取用户信息请求
+                String visitInfo = HttpClientUtil.doGet(getVisitInfoUrl);
+                //把返回的结果转化为JSONObject对象
+                JSONObject object = JSONObject.parseObject(visitInfo);
+
+                //判断访问微信api是否成功
+                if(getWxApiResult(object)){
+                    String userId = (String)object.get("UserId");
+                    //当前登录设备Id
+                    String devId = (String)object.get("DeviceId");
+
+                    if(!StringUtil.isEmpty(userId)){
+                        //把人员信息存到session
+                        request.getSession().setAttribute("userId",userId);
+                        success = true;
+                        message = GlobalConstant.SUCCESS_MESSAGE;
+                    }
+                }
+            }
+        } catch (Exception e){
+            success = false;
+            message = e.getMessage();
+        }
+        return result();
+    }
+
+    /**
      * 根据url获取config-->用于对接js-sdk
      * @param url
      * @return
