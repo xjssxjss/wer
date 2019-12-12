@@ -3,12 +3,6 @@
   <component name="ChangeListManager">
     <list default="true" id="6c9232ff-2c76-47aa-92c5-9ea328deab6b" name="Default" comment="">
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/static/common/js/common.js" afterPath="$PROJECT_DIR$/src/main/resources/static/common/js/common.js" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/pages/apec/apec_on_line.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/pages/apec/apec_on_line.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/pages/msg/msg_detail.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/pages/msg/msg_detail.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/pages/msg/msg_pub.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/pages/msg/msg_pub.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/pages/tabbar/tabbar.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/pages/tabbar/tabbar.html" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/pages/visa/visa_claim.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/pages/visa/visa_claim.html" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/resources/templates/pages/visa/visa_requirement_search.html" afterPath="$PROJECT_DIR$/src/main/resources/templates/pages/visa/visa_requirement_search.html" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
@@ -96,8 +90,8 @@
       <file leaf-file-name="visa_requirement_search.html" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/resources/templates/pages/visa/visa_requirement_search.html">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
-              <caret line="286" column="40" lean-forward="true" selection-start-line="286" selection-start-column="40" selection-end-line="286" selection-end-column="40" />
+            <state relative-caret-position="144">
+              <caret line="282" column="24" lean-forward="false" selection-start-line="282" selection-start-column="24" selection-end-line="282" selection-end-column="24" />
               <folding />
             </state>
           </provider>
@@ -1398,7 +1392,7 @@
       <workItem from="1575248996213" duration="70407000" />
       <workItem from="1575452177592" duration="230000" />
       <workItem from="1575507917114" duration="6085000" />
-      <workItem from="1575514134471" duration="56939000" />
+      <workItem from="1575514134471" duration="56979000" />
     </task>
     <task id="LOCAL-00001" summary="Commit Reason:提交企业微信相关代码&#10;Commit Author:Sean">
       <created>1573784805578</created>
@@ -1533,7 +1527,14 @@
       <option name="project" value="LOCAL" />
       <updated>1576046486361</updated>
     </task>
-    <option name="localTasksCounter" value="20" />
+    <task id="LOCAL-00020" summary="Commit Reason:提交企业微信相关代码，一期代码开发&#10;Commit Author:Sean">
+      <created>1576113023616</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1576113023616</updated>
+    </task>
+    <option name="localTasksCounter" value="21" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -1566,7 +1567,7 @@
     </history-entry>
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="479134000" />
+    <option name="totallyTimeSpent" value="479174000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -2151,8 +2152,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/resources/templates/pages/visa/visa_requirement_search.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
-          <caret line="286" column="40" lean-forward="true" selection-start-line="286" selection-start-column="40" selection-end-line="286" selection-end-column="40" />
+        <state relative-caret-position="144">
+          <caret line="282" column="24" lean-forward="false" selection-start-line="282" selection-start-column="24" selection-end-line="282" selection-end-column="24" />
           <folding />
         </state>
       </provider>

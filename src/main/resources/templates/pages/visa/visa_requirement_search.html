@@ -280,7 +280,7 @@
                 $.showLoading();
                 $.ajax({
                     url:serverUrl+'/visaRequirementsController/queryVisaRequirementsInfoBySearchKey',
-                    method:'get',
+                    type:'get',
                     data:{searcyKey:searchKey},
                     dataType:'json',
                     success:function (res) {
