@@ -279,7 +279,7 @@
                 loading = true;
                 $.showLoading();
                 $.ajax({
-                    url:'http://192.168.0.131:9999/wer/visaRequirementsController/queryVisaRequirementsInfoBySearchKey',
+                    url:serverUrl+'/visaRequirementsController/queryVisaRequirementsInfoBySearchKey',
                     method:'get',
                     data:{searcyKey:searchKey},
                     dataType:'json',

@@ -111,7 +111,7 @@
 
         var siteUrl = encodeURIComponent(window.location.href.split('#')[0]); //(地址是获取当前页面的地址)比较重要
         $.ajax({
-            url : "http://spro.free.idcfengye.com/wer/indexController/getConfigInfo?url="+siteUrl,
+            url : serverUrl+"/indexController/getConfigInfo?url="+siteUrl,
             type : "get",
             dataType : "JSON",
             async:true,

@@ -1,7 +1,7 @@
 /* 提供公共js */
 //服务器访问地址
 var context = 'wer';
-var serverUrl = 'http://spro.free.idcfengye.com' + context;
+var serverUrl = 'http://spro.free.idcfengye.com/' + context;
 
 $.fn.serializeObject = function() {
     var o = {};
